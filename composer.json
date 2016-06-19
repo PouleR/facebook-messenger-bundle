@@ -1,0 +1,22 @@
+{
+    "name": "jkosmetos/facebook-php-messenger-api",
+    "description": "A PHP wrapper for the Facebook Messenger API",
+    "type": "",
+    "autoload": {
+        "psr-4": {
+            "": "src/"
+        }
+    },
+    "require": {
+        "symfony/serializer": "^3.1",
+        "symfony/property-access": "^3.1"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "John Kosmetos",
+            "email": "jkosmetos@gmail.com"
+        }
+    ],
+    "minimum-stability": "stable"
+}
