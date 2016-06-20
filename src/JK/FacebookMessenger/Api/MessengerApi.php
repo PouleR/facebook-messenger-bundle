@@ -8,6 +8,7 @@
 
 namespace JK\FacebookMessenger\Api;
 
+use JK\FacebookMessenger\Core\Configuration\Configuration;
 use JK\FacebookMessenger\Core\Entity\Recipient;
 use JK\FacebookMessenger\Core\Message;
 use JK\FacebookMessenger\Curl\Curl;
@@ -48,7 +49,7 @@ class MessengerApi
      * MessengerApi constructor.
      * @param string $token
      */
-    public function __construct($token = '')
+    public function __construct($token)
     {
         $this->encoders = [new JsonEncoder()];
         $this->normalizers = [new ObjectNormalizer(null, new CamelCaseToSnakeCaseNameConverter())];
@@ -77,6 +78,32 @@ class MessengerApi
                 'message' => $message,
                 'access_token' => $this->token
             ], 'json');
+
+        // Do the call and return the JSON response
+        return json_decode($curl->post($url, $content), true);
+    }
+
+    /**
+     * @param int $pageId
+     * @param Configuration $configuration
+     * @return mixed
+     */
+    public function sendConfiguration($pageId, Configuration $configuration)
+    {
+        // Init curl
+        $curl = new Curl();
+
+        $params = [
+            'access_token' => $this->token
+        ];
+
+        // Build the URL
+        $url = self::FB_API_URL . '/' . $pageId . '/thread_settings?' . http_build_query($params);
+
+        // Serialize the content
+        $content = $this->serializer->serialize($configuration, 'json');
+
+        echo $content . PHP_EOL;
 
         // Do the call and return the JSON response
         return json_decode($curl->post($url, $content), true);

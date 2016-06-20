@@ -10,7 +10,7 @@ namespace JK\FacebookMessenger\Core;
 
 /**
  * Interface AttachmentInterface
- * @package jkosmetos\Interfaces
+ * @package JK\FacebookMessenger\Core
  */
 interface AttachmentInterface
 {

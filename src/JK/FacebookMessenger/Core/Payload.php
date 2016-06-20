@@ -10,8 +10,8 @@ namespace JK\FacebookMessenger\Core;
 
 /**
  * Class Payload
- * @package jkosmetos
+ * @package JK\FacebookMessenger\Core
  */
-abstract class Payload implements PayloadInterface
+abstract class Payload
 {
 }

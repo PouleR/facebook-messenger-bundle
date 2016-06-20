@@ -10,10 +10,6 @@ namespace JK\FacebookMessenger\Core;
 
 /**
  * Class Attachment
- * @package jkosmetos
- */
-/**
- * Class Attachment
  * @package JK\FacebookMessenger\Core
  */
 abstract class Attachment implements AttachmentInterface
