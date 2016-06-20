@@ -99,8 +99,6 @@ class Message implements \JsonSerializable
      */
     public function jsonSerialize()
     {
-        $recipient = new Recipient(1103144033090957);
-
-        return $this->serializer->serialize(['message' => $this, 'recipient' => $recipient], 'json');
+        return $this->serializer->serialize($this, 'json');
     }
 }
