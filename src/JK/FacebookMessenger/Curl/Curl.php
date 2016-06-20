@@ -70,9 +70,7 @@ class Curl
     {
 
         $url .= '?' . http_build_query($params);
-
-        echo $url . PHP_EOL;
-
+        
         curl_setopt($this->ch, CURLOPT_URL, $url);
 
         return curl_exec($this->ch);
