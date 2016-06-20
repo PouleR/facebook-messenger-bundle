@@ -9,34 +9,13 @@
 namespace JK\FacebookMessenger\Core;
 
 use JK\FacebookMessenger\Core\Attachment;
-use JK\FacebookMessenger\Core\Entity\Recipient;
-use Symfony\Component\Serializer\Serializer;
-use Symfony\Component\Serializer\Encoder\JsonEncoder;
-use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
-use Symfony\Component\Serializer\NameConverter\CamelCaseToSnakeCaseNameConverter;
 
 /**
  * Class Message
  * @package JK\FacebookMessenger\Core
  */
-class Message implements \JsonSerializable
+class Message
 {
-    
-    /**
-     * @var array
-     */
-    private $encoders;
-
-    /**
-     * @var array
-     */
-    private $normalizers;
-
-    /**
-     * @var Serializer
-     */
-    private $serializer;
-
     /**
      * @var string
      */
@@ -54,10 +33,6 @@ class Message implements \JsonSerializable
      */
     public function __construct($text = '', AttachmentInterface $attachment = null)
     {
-        $this->encoders = array(new JsonEncoder());
-        $this->normalizers = array(new ObjectNormalizer(null, new CamelCaseToSnakeCaseNameConverter()));
-        $this->serializer = new Serializer($this->normalizers, $this->encoders);
-
         $this->text = $text;
         $this->attachment = $attachment;
     }
@@ -94,11 +69,4 @@ class Message implements \JsonSerializable
         $this->attachment = $attachment;
     }
 
-    /**
-     * @return string
-     */
-    public function jsonSerialize()
-    {
-        return $this->serializer->serialize($this, 'json');
-    }
 }
