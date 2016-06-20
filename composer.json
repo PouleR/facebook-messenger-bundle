@@ -1,5 +1,5 @@
 {
-    "name": "jkosmetos/facebook-php-messenger-api",
+    "name": "jkosmetos/facebook-messenger-api",
     "description": "A PHP wrapper for the Facebook Messenger API",
     "type": "",
     "autoload": {
@@ -8,6 +8,7 @@
         }
     },
     "require": {
+        "php": ">=5.3.0",
         "symfony/serializer": "^3.1",
         "symfony/property-access": "^3.1"
     },
