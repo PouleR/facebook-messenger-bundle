@@ -34,11 +34,11 @@ class Curl
      * @param null $url
      * @param array $headers
      */
-    public function __construct($url = null, $headers = [])
+    public function __construct($url = null, $headers = ['Content-Type: application/json'])
     {
         // Initialize some stuff
         $this->ch = curl_init($url);
-        $this->headers = ['Content-Type: application/json'];
+        $this->headers = $headers;
 
         // Set default ops
         curl_setopt($this->ch, CURLOPT_HTTPHEADER, $this->headers);

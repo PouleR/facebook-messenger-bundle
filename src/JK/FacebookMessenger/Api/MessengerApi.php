@@ -63,10 +63,10 @@ class MessengerApi
      * @param Message $message
      * @return mixed
      */
-    public function sendMessage(Recipient $recipient, Message $message)
+    public function postMessage(Recipient $recipient, Message $message)
     {
 
-        // Init curl
+        // Init Curl
         $curl = new Curl();
 
         // Build the URL
@@ -88,9 +88,9 @@ class MessengerApi
      * @param Configuration $configuration
      * @return mixed
      */
-    public function sendConfiguration($pageId, Configuration $configuration)
+    public function postConfiguration($pageId, Configuration $configuration)
     {
-        // Init curl
+        // Init Curl
         $curl = new Curl();
 
         $params = [
@@ -103,8 +103,6 @@ class MessengerApi
         // Serialize the content
         $content = $this->serializer->serialize($configuration, 'json');
 
-        echo $content . PHP_EOL;
-
         // Do the call and return the JSON response
         return json_decode($curl->post($url, $content), true);
     }
@@ -116,7 +114,7 @@ class MessengerApi
      */
     public function getUser($id, array $fields = ['first_name', 'last_name'])
     {
-        // Init curl
+        // Init Curl
         $curl = new Curl();
 
         // Build the URL

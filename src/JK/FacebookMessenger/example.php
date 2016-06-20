@@ -59,7 +59,7 @@ class Example {
         $callToAction = new CallToAction($message);
 
         // Set the welcome message
-        $configuration->setCallToActions([$callToAction]);
+        $configuration->setCallToActions([$callToAction]); // Set this to a blank array to remove all configurations
 
         return $configuration;
     }
