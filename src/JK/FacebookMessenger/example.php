@@ -14,6 +14,8 @@ use JK\FacebookMessenger\Core\Entity\Address;
 use JK\FacebookMessenger\Core\Entity\Adjustment;
 use JK\FacebookMessenger\Core\Entity\Summary;
 use JK\FacebookMessenger\Core\Payload\MediaPlayload;
+use JK\FacebookMessenger\Core\QuickReply;
+use JK\FacebookMessenger\Core\QuickReply\QuickReplies;
 use JK\FacebookMessenger\Core\Template\ButtonTemplatePayload;
 use JK\FacebookMessenger\Core\Template\GenericTemplatePayload;
 use JK\FacebookMessenger\Core\Template\ReceiptTemplatePayload;
@@ -236,6 +238,30 @@ class Example {
 
         // Set the Attachment on the Message
         $message->setAttachment($templateAttachment);
+
+        return $message;
+    }
+
+    /**
+     * @return QuickReply
+     * Generate a QuickReply message
+     */
+    public function generateQuickReply()
+    {
+        // See example https://developers.facebook.com/docs/messenger-platform/send-api-reference/quick-replies
+        $message = new QuickReply('Pick a color:');
+
+        $reply = new QuickReplies();
+        $reply->setTitle('Red');
+        $reply->setPayload('DEVELOPER_DEFINED_PAYLOAD_FOR_PICKING_RED');
+
+        $message->addQuickReplies($reply);
+
+        $reply = new QuickReplies();
+        $reply->setTitle('Green');
+        $reply->setPayload('DEVELOPER_DEFINED_PAYLOAD_FOR_PICKING_GREEN');
+
+        $message->addQuickReplies($reply);
 
         return $message;
     }
