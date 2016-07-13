@@ -13,7 +13,7 @@ use JK\FacebookMessenger\Core\Element\ReceiptElement;
 use JK\FacebookMessenger\Core\Entity\Address;
 use JK\FacebookMessenger\Core\Entity\Adjustment;
 use JK\FacebookMessenger\Core\Entity\Summary;
-use JK\FacebookMessenger\Core\Payload\ImagePayload;
+use JK\FacebookMessenger\Core\Payload\MediaPlayload;
 use JK\FacebookMessenger\Core\Template\ButtonTemplatePayload;
 use JK\FacebookMessenger\Core\Template\GenericTemplatePayload;
 use JK\FacebookMessenger\Core\Template\ReceiptTemplatePayload;
@@ -89,13 +89,13 @@ class Example {
         // Instantiate all the things
         $message = new Message();
         $imageAttachment = new ImageAttachment();
-        $imagePayload = new ImagePayload();
+        $mediaPayload = new MediaPlayload();
 
-        // Set ImagePayload specific parameters
-        $imagePayload->setUrl('https://placekitten.com/200/300');
+        // Set MediaPayload specific parameters
+        $mediaPayload->setUrl('https://placekitten.com/200/300');
 
         // Set the Payload on the Attachment
-        $imageAttachment->setPayload($imagePayload);
+        $imageAttachment->setPayload($mediaPayload);
 
         // Set the Attachment on the Payload
         $message->setAttachment($imageAttachment);

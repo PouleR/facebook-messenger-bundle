@@ -11,10 +11,10 @@ namespace JK\FacebookMessenger\Core\Payload;
 use JK\FacebookMessenger\Core\Payload;
 
 /**
- * Class ImagePayload
+ * Class MediaPlayload
  * @package JK\FacebookMessenger\Core\Payload
  */
-class ImagePayload extends Payload
+class MediaPlayload extends Payload
 {
     /**
      * @var string
@@ -22,7 +22,7 @@ class ImagePayload extends Payload
     protected $url;
 
     /**
-     * ImagePayload constructor.
+     * MediaPlayload constructor.
      * @param string $url
      */
     public function __construct($url = '')

@@ -16,6 +16,9 @@ abstract class Attachment implements AttachmentInterface
 {
     const TYPE_IMAGE = 'image';
     const TYPE_TEMPLATE = 'template';
+    const TYPE_AUDIO = 'audio';
+    const TYPE_VIDEO = 'video';
+    const TYPE_FILE = 'file';
 
     /**
      * @var string
