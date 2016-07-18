@@ -3,6 +3,7 @@
 namespace JK\FacebookMessenger\Core\Callback;
 
 use JK\FacebookMessenger\Core\Attachment;
+use JK\FacebookMessenger\Core\AttachmentInterface;
 
 /**
  * Class MessageReceive
