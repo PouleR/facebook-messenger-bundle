@@ -2,13 +2,13 @@
 
 namespace JK\FacebookMessenger\Core\Callback;
 
-use JK\FacebookMessenger\Core\Message;
+use JK\FacebookMessenger\Core\Attachment;
 
 /**
  * Class MessageReceive
  * @package JK\FacebookMessenger\Core\Callback
  */
-class MessageReceive extends Message
+class MessageReceive
 {
     /**
      * @var string
@@ -19,6 +19,21 @@ class MessageReceive extends Message
      * @var int
      */
     protected $seq;
+
+    /**
+     * @var string|null
+     */
+    protected $text = null;
+
+    /**
+     * @var Attachment[]
+     */
+    protected $attachments = array();
+
+    /**
+     * @var \QuickReplyReceive
+     */
+    protected $quickReply = null;
 
     /**
      * @return string
@@ -50,5 +65,53 @@ class MessageReceive extends Message
     public function setSeq($seq)
     {
         $this->seq = $seq;
+    }
+
+    /**
+     * @return string
+     */
+    public function getText()
+    {
+        return $this->text;
+    }
+
+    /**
+     * @param string $text
+     */
+    public function setText($text)
+    {
+        $this->text = $text;
+    }
+
+    /**
+     * @return \JK\FacebookMessenger\Core\Attachment[]
+     */
+    public function getAttachments()
+    {
+        return $this->attachments;
+    }
+
+    /**
+     * @param AttachmentInterface $attachment
+     */
+    public function addAttachment(AttachmentInterface $attachment)
+    {
+        $this->attachments[] = $attachment;
+    }
+
+    /**
+     * @return \QuickReplyReceive
+     */
+    public function getQuickReply()
+    {
+        return $this->quickReply;
+    }
+
+    /**
+     * @param \QuickReplyReceive $quickReply
+     */
+    public function setQuickReply($quickReply)
+    {
+        $this->quickReply = $quickReply;
     }
 }

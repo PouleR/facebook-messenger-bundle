@@ -8,8 +8,6 @@
 
 namespace JK\FacebookMessenger\Core;
 
-use JK\FacebookMessenger\Core\Attachment;
-
 /**
  * Class Message
  * @package JK\FacebookMessenger\Core
