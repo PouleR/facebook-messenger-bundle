@@ -9,12 +9,12 @@ namespace JK\FacebookMessenger\Core\Callback;
 class PostbackCallback extends Callback
 {
     /**
-     * @var PostbackReceive
+     * @var PostbackPayloadReceive
      */
     protected $postback;
 
     /**
-     * @return PostbackReceive
+     * @return PostbackPayloadReceive
      */
     public function getPostback()
     {
@@ -22,7 +22,7 @@ class PostbackCallback extends Callback
     }
 
     /**
-     * @param PostbackReceive $postback
+     * @param PostbackPayloadReceive $postback
      */
     public function setPostback($postback)
     {

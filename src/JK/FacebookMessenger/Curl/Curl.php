@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: john
- * Date: 2016/06/20
- * Time: 12:03 PM
- */
 
 namespace JK\FacebookMessenger\Curl;
 
@@ -31,8 +25,8 @@ class Curl
 
     /**
      * Curl constructor.
-     * @param null $url
-     * @param array $headers
+     * @param null|string $url
+     * @param array       $headers
      */
     public function __construct($url = null, $headers = ['Content-Type: application/json'])
     {
@@ -48,8 +42,8 @@ class Curl
     }
 
     /**
-     * @param $url
-     * @param $content
+     * @param string $url
+     * @param string $content
      * @return mixed
      */
     public function post($url, $content)
@@ -62,13 +56,12 @@ class Curl
     }
 
     /**
-     * @param $url
-     * @param array $params
+     * @param string $url
+     * @param array  $params
      * @return mixed
      */
     public function get($url, array $params)
     {
-
         $url .= '?' . http_build_query($params);
         
         curl_setopt($this->ch, CURLOPT_URL, $url);

@@ -3,10 +3,10 @@
 namespace JK\FacebookMessenger\Core\Callback;
 
 /**
- * Class PostbackReceive
+ * Class PostbackPayloadReceive
  * @package JK\FacebookMessenger\Core\Callback
  */
-class PostbackReceive extends PayloadReceive
+class PostbackPayloadReceive extends PayloadReceive
 {
 
 }

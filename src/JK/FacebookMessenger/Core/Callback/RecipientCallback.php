@@ -3,10 +3,10 @@
 namespace JK\FacebookMessenger\Core\Callback;
 
 /**
- * Class Recipient
+ * Class RecipientCallback
  * @package JK\FacebookMessenger\Core\Callback
  */
-class Recipient
+class RecipientCallback
 {
     /**
      * @var string

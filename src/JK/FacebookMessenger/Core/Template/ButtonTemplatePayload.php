@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: john
- * Date: 2016/06/13
- * Time: 2:14 PM
- */
 
 namespace JK\FacebookMessenger\Core\Template;
 

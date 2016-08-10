@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: john
- * Date: 2016/06/20
- * Time: 2:15 PM
- */
 
 namespace JK\FacebookMessenger\Core\Configuration;
 
@@ -23,7 +17,7 @@ class CallToAction
 
     /**
      * CallToAction constructor.
-     * @param string $message
+     * @param Message $message
      */
     public function __construct(Message $message = null)
     {

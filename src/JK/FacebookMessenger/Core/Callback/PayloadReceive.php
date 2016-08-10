@@ -2,6 +2,8 @@
 
 namespace JK\FacebookMessenger\Core\Callback;
 
+use JK\FacebookMessenger\Core\Payload;
+
 /**
  * Class PayloadReceive
  * @package JK\FacebookMessenger\Core\Callback
@@ -9,12 +11,12 @@ namespace JK\FacebookMessenger\Core\Callback;
 class PayloadReceive
 {
     /**
-     * @var \JK\FacebookMessenger\Core\Payload
+     * @var Payload
      */
     protected $payload;
 
     /**
-     * @return \JK\FacebookMessenger\Core\Payload
+     * @return Payload
      */
     public function getPayload()
     {
@@ -22,9 +24,9 @@ class PayloadReceive
     }
 
     /**
-     * @param \JK\FacebookMessenger\Core\Payload $payload
+     * @param Payload $payload
      */
-    public function setPayload($payload)
+    public function setPayload(Payload $payload)
     {
         $this->payload = $payload;
     }

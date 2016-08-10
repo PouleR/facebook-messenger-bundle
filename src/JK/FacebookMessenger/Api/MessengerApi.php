@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: john
- * Date: 2016/06/16
- * Time: 3:37 PM
- */
 
 namespace JK\FacebookMessenger\Api;
 
@@ -84,7 +78,7 @@ class MessengerApi
     }
 
     /**
-     * @param int $pageId
+     * @param int           $pageId
      * @param Configuration $configuration
      * @return mixed
      */

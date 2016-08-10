@@ -2,7 +2,7 @@
 
 namespace JK\FacebookMessenger\Core;
 
-use JK\FacebookMessenger\Core\Attachment;
+use JK\FacebookMessenger\Core\QuickReply\QuickReplies;
 
 /**
  * Class QuickReply

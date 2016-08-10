@@ -9,12 +9,12 @@ namespace JK\FacebookMessenger\Core\Callback;
 class Callback
 {
     /**
-     * @var Sender
+     * @var SenderCallback
      */
     protected $sender;
 
     /**
-     * @var Recipient
+     * @var RecipientCallback
      */
     protected $recipient;
 
@@ -24,7 +24,7 @@ class Callback
     protected $timestamp;
 
     /**
-     * @return Sender
+     * @return SenderCallback
      */
     public function getSender()
     {
@@ -32,15 +32,15 @@ class Callback
     }
 
     /**
-     * @param Sender $sender
+     * @param SenderCallback $sender
      */
-    public function setSender(Sender $sender)
+    public function setSender(SenderCallback $sender)
     {
         $this->sender = $sender;
     }
 
     /**
-     * @return Recipient
+     * @return RecipientCallback
      */
     public function getRecipient()
     {
@@ -48,9 +48,9 @@ class Callback
     }
 
     /**
-     * @param Recipient $recipient
+     * @param RecipientCallback $recipient
      */
-    public function setRecipient(Recipient $recipient)
+    public function setRecipient(RecipientCallback $recipient)
     {
         $this->recipient = $recipient;
     }

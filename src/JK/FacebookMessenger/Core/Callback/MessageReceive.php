@@ -32,7 +32,7 @@ class MessageReceive
     protected $attachments = array();
 
     /**
-     * @var \QuickReplyReceive
+     * @var QuickReplyPayloadReceive
      */
     protected $quickReply = null;
 
@@ -85,7 +85,7 @@ class MessageReceive
     }
 
     /**
-     * @return \JK\FacebookMessenger\Core\Attachment[]
+     * @return Attachment[]
      */
     public function getAttachments()
     {
@@ -101,7 +101,7 @@ class MessageReceive
     }
 
     /**
-     * @return \QuickReplyReceive
+     * @return QuickReplyPayloadReceive
      */
     public function getQuickReply()
     {
@@ -109,7 +109,7 @@ class MessageReceive
     }
 
     /**
-     * @param \QuickReplyReceive $quickReply
+     * @param QuickReplyPayloadReceive $quickReply
      */
     public function setQuickReply($quickReply)
     {

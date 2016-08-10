@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: john
- * Date: 2016/06/20
- * Time: 1:18 PM
- */
 
 namespace JK\FacebookMessenger\Core\Configuration;
 

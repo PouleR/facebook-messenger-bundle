@@ -1,0 +1,10 @@
+# Mac files
+.DS_Store
+
+# IDE Files
+.idea
+/nbproject/
+
+# Composer
+/composer.phar
+/vendor/
