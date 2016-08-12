@@ -6,7 +6,7 @@ namespace JK\FacebookMessenger\Core\Configuration;
  * Class AbstractConfiguration
  * @package JK\FacebookMessenger\Core\Configuration
  */
-class AbstractConfiguration implements ConfigurationInterface
+abstract class AbstractConfiguration implements ConfigurationInterface
 {
     /**
      * @var string
