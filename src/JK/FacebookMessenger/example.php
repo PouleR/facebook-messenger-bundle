@@ -6,8 +6,8 @@ use JK\FacebookMessenger\Core\Attachment\TemplateAttachment;
 use JK\FacebookMessenger\Core\Attachment\ImageAttachment;
 use JK\FacebookMessenger\Core\Button\PostbackButton;
 use JK\FacebookMessenger\Core\Button\WebUrlButton;
-use JK\FacebookMessenger\Core\Configuration\Configuration;
-use JK\FacebookMessenger\Core\Configuration\CallToAction;
+use JK\FacebookMessenger\Core\Configuration\GetStartedConfiguration;
+use JK\FacebookMessenger\Core\Configuration\GreetingTextConfiguration;
 use JK\FacebookMessenger\Core\Element\GenericElement;
 use JK\FacebookMessenger\Core\Element\ReceiptElement;
 use JK\FacebookMessenger\Core\Entity\Address;
@@ -21,6 +21,10 @@ use JK\FacebookMessenger\Core\Template\GenericTemplatePayload;
 use JK\FacebookMessenger\Core\Template\ReceiptTemplatePayload;
 use JK\FacebookMessenger\Core\Message;
 
+/**
+ * Class Example
+ * @package JK\FacebookMessenger
+ */
 class Example {
 
     /**
@@ -43,25 +47,26 @@ class Example {
         $wuButton->setUrl('https://www.google.com');
 
         $this->buttons = [$pbButton, $wuButton];
-
     }
 
     /**
-     * @return Configuration
-     * Generate a plain text welcome message configuration
+     * @return GreetingTextConfiguration
      */
-    public function generateConfiguration()
+    public function generateGreetingTextConfiguration()
     {
+        $configuration = new GreetingTextConfiguration();
+        $configuration->setGreetingText('Welcome!');
 
-        // Instantiate a new Message
-        $configuration = new Configuration();
-        $message = self::generateTextMessage();
+        return $configuration;
+    }
 
-        $message->setText('Welcome! Want to learn how to read good? Type something in and get going! ^_^');
-        $callToAction = new CallToAction($message);
-
-        // Set the welcome message
-        $configuration->setCallToActions([$callToAction]); // Set this to a blank array to remove all configurations
+    /**
+     * @return GetStartedConfiguration
+     */
+    public function generateGetStartedConfiguration()
+    {
+        $configuration = new GetStartedConfiguration();
+        $configuration->setPayload('USER_DEFINED_PAYLOAD');
 
         return $configuration;
     }

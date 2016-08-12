@@ -2,7 +2,7 @@
 
 namespace JK\FacebookMessenger\Api;
 
-use JK\FacebookMessenger\Core\Configuration\Configuration;
+use JK\FacebookMessenger\Core\Configuration\ConfigurationInterface;
 use JK\FacebookMessenger\Core\Entity\Recipient;
 use JK\FacebookMessenger\Core\Message;
 use JK\FacebookMessenger\Curl\Curl;
@@ -78,11 +78,10 @@ class MessengerApi
     }
 
     /**
-     * @param int           $pageId
-     * @param Configuration $configuration
+     * @param ConfigurationInterface $configuration
      * @return mixed
      */
-    public function postConfiguration($pageId, Configuration $configuration)
+    public function postConfiguration(ConfigurationInterface $configuration)
     {
         // Init Curl
         $curl = new Curl();
@@ -92,7 +91,7 @@ class MessengerApi
         ];
 
         // Build the URL
-        $url = self::FB_API_URL . '/' . $pageId . '/thread_settings?' . http_build_query($params);
+        $url = self::FB_API_URL . '/me/thread_settings?' . http_build_query($params);
 
         // Serialize the content
         $content = $this->serializer->serialize($configuration, 'json');
