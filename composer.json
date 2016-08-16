@@ -1,6 +1,6 @@
 {
-    "name": "jkosmetos/facebook-messenger-api",
-    "description": "A PHP wrapper for the Facebook Messenger API",
+    "name": "pouler/facebook-messenger-bundle",
+    "description": "A Symfony bundle for Facebook Messenger",
     "type": "",
     "autoload": {
         "psr-4": {
@@ -15,8 +15,8 @@
     "license": "MIT",
     "authors": [
         {
-            "name": "John Kosmetos",
-            "email": "jkosmetos@gmail.com"
+            "name": "Paul Radt",
+            "email": "paulradt@gmail.com"
         }
     ],
     "minimum-stability": "stable"
