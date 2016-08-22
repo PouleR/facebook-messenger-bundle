@@ -1,0 +1,3 @@
+services:
+  pouler.facebookmessenger.service:
+      class: PouleR\FacebookMessengerBundle\Service\FacebookMessengerService
