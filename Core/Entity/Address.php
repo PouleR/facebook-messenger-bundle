@@ -3,8 +3,7 @@
 namespace PouleR\FacebookMessengerBundle\Core\Entity;
 
 /**
- * Class Address
- * @package PouleR\FacebookMessengerBundle\Core\Entity
+ * Class Address.
  */
 class Address
 {
@@ -40,6 +39,7 @@ class Address
 
     /**
      * Address constructor.
+     *
      * @param $street1
      * @param $street2
      * @param $city
@@ -152,5 +152,4 @@ class Address
     {
         $this->country = $country;
     }
-
 }

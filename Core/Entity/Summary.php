@@ -3,8 +3,7 @@
 namespace PouleR\FacebookMessengerBundle\Core\Entity;
 
 /**
- * Class Summary
- * @package PouleR\FacebookMessengerBundle\Core\Entity
+ * Class Summary.
  */
 class Summary
 {
@@ -30,6 +29,7 @@ class Summary
 
     /**
      * Summary constructor.
+     *
      * @param int $subtotal
      * @param int $shippingCost
      * @param int $totalTax
@@ -106,5 +106,4 @@ class Summary
     {
         $this->totalCost = $totalCost;
     }
-
 }

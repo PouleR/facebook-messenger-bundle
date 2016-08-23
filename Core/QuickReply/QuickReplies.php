@@ -3,8 +3,7 @@
 namespace PouleR\FacebookMessengerBundle\Core\QuickReply;
 
 /**
- * Class QuickReplies
- * @package PouleR\FacebookMessengerBundle\Core\QuickReply
+ * Class QuickReplies.
  */
 class QuickReplies
 {

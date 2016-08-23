@@ -3,8 +3,7 @@
 namespace PouleR\FacebookMessengerBundle\Core;
 
 /**
- * Interface AttachmentInterface
- * @package PouleR\FacebookMessengerBundle\Core
+ * Interface AttachmentInterface.
  */
 interface AttachmentInterface
 {
@@ -27,5 +26,4 @@ interface AttachmentInterface
      * @param mixed $payload
      */
     public function setPayload($payload);
-
 }

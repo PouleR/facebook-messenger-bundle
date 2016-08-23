@@ -5,8 +5,7 @@ namespace PouleR\FacebookMessengerBundle\Core\Template;
 use PouleR\FacebookMessengerBundle\Core\Payload\TemplatePayload;
 
 /**
- * Class GenericTemplatePayload
- * @package PouleR\FacebookMessengerBundle\Core\Template
+ * Class GenericTemplatePayload.
  */
 class GenericTemplatePayload extends TemplatePayload
 {
@@ -17,6 +16,7 @@ class GenericTemplatePayload extends TemplatePayload
 
     /**
      * GenericTemplatePayload constructor.
+     *
      * @param array $elements
      */
     public function __construct($elements = [])
@@ -27,7 +27,7 @@ class GenericTemplatePayload extends TemplatePayload
         // Set GenericTemplatePayload specific properties
         $this->elements = $elements;
     }
-    
+
     /**
      * @return array
      */
@@ -43,5 +43,4 @@ class GenericTemplatePayload extends TemplatePayload
     {
         $this->elements = $elements;
     }
-
 }

@@ -3,8 +3,7 @@
 namespace PouleR\FacebookMessengerBundle\Core\Callback;
 
 /**
- * Class RecipientCallback
- * @package PouleR\FacebookMessengerBundle\Core\Callback
+ * Class RecipientCallback.
  */
 class RecipientCallback
 {

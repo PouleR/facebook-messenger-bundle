@@ -3,10 +3,8 @@
 namespace PouleR\FacebookMessengerBundle\Exception;
 
 /**
- * Class FacebookMessengerException
- * @package PouleR\FacebookMessengerBundle\Exception
+ * Class FacebookMessengerException.
  */
 class FacebookMessengerException extends \Exception
 {
-
 }

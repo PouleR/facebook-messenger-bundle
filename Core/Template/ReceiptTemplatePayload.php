@@ -7,8 +7,7 @@ use PouleR\FacebookMessengerBundle\Core\Entity\Address;
 use PouleR\FacebookMessengerBundle\Core\Entity\Summary;
 
 /**
- * Class ReceiptTemplatePayload
- * @package PouleR\FacebookMessengerBundle\Core\Template
+ * Class ReceiptTemplatePayload.
  */
 class ReceiptTemplatePayload extends TemplatePayload
 {
@@ -64,18 +63,28 @@ class ReceiptTemplatePayload extends TemplatePayload
 
     /**
      * ReceiptTemplatePayload constructor.
-     * @param string $recipientName
-     * @param string $orderNumber
-     * @param string $currency
-     * @param string $orderUrl
-     * @param string $timestamp
-     * @param array $elements
+     *
+     * @param string       $recipientName
+     * @param string       $orderNumber
+     * @param string       $currency
+     * @param string       $orderUrl
+     * @param string       $timestamp
+     * @param array        $elements
      * @param Address|null $address
      * @param Summary|null $summary
-     * @param array $adjustments
+     * @param array        $adjustments
      */
-    public function __construct($recipientName = '', $orderNumber = '', $currency = '', $orderUrl = '', $timestamp = '', $elements = [], Address $address = null, Summary $summary = null, $adjustments = [])
-    {
+    public function __construct(
+        $recipientName = '',
+        $orderNumber = '',
+        $currency = '',
+        $orderUrl = '',
+        $timestamp = '',
+        $elements = [],
+        Address $address = null,
+        Summary $summary = null,
+        $adjustments = []
+    ) {
         // Invoke parent constructor and force type value
         parent::__construct(TemplatePayload::TYPE_RECEIPT);
 
@@ -250,5 +259,4 @@ class ReceiptTemplatePayload extends TemplatePayload
     {
         $this->adjustments = $adjustments;
     }
-
 }

@@ -5,7 +5,6 @@ namespace PouleR\FacebookMessengerBundle\Service;
 use PouleR\FacebookMessengerBundle\Core\Configuration\ConfigurationInterface;
 use PouleR\FacebookMessengerBundle\Core\Entity\Recipient;
 use PouleR\FacebookMessengerBundle\Core\Message;
-use PouleR\FacebookMessengerBundle\Curl\Curl;
 use PouleR\FacebookMessengerBundle\Exception\FacebookMessengerException;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\NameConverter\CamelCaseToSnakeCaseNameConverter;
@@ -13,8 +12,7 @@ use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Serializer\Serializer;
 
 /**
- * Class MessengerApi
- * @package PouleR\FacebookMessengerBundle\Api
+ * Class MessengerApi.
  */
 class FacebookMessengerService
 {
@@ -41,14 +39,21 @@ class FacebookMessengerService
     protected $normalizers;
 
     /**
-     * MessengerApi constructor.
-     * @param string $token
+     * @var CurlInterface
      */
-    public function __construct($token)
+    protected $curlService;
+
+    /**
+     * FacebookMessengerService constructor.
+     *
+     * @param CurlInterface $curlService
+     */
+    public function __construct(CurlInterface $curlService)
     {
         $this->encoders = [new JsonEncoder()];
         $this->normalizers = [new ObjectNormalizer(null, new CamelCaseToSnakeCaseNameConverter())];
         $this->serializer = new Serializer($this->normalizers, $this->encoders);
+        $this->curlService = $curlService;
     }
 
     /**
@@ -61,81 +66,78 @@ class FacebookMessengerService
 
     /**
      * @param Recipient $recipient
-     * @param Message $message
+     * @param Message   $message
+     *
      * @throws FacebookMessengerException
+     *
      * @return mixed
      */
     public function postMessage(Recipient $recipient, Message $message)
     {
         $this->checkAccessToken();
 
-        // Init Curl
-        $curl = new Curl();
-
         // Build the URL
-        $url = self::FB_API_URL . '/me/messages';
+        $url = self::FB_API_URL.'/me/messages';
 
         // Serialize the content
         $content = $this->serializer->serialize([
                 'recipient' => $recipient,
                 'message' => $message,
-                'access_token' => $this->accessToken
+                'access_token' => $this->accessToken,
             ], 'json');
 
         // Do the call and return the JSON response
-        return json_decode($curl->post($url, $content), true);
+        return json_decode($this->curlService->post($url, $content), true);
     }
 
     /**
      * @param ConfigurationInterface $configuration
+     *
      * @throws FacebookMessengerException
+     *
      * @return mixed
      */
     public function postConfiguration(ConfigurationInterface $configuration)
     {
         $this->checkAccessToken();
 
-        // Init Curl
-        $curl = new Curl();
-
         $params = [
-            'access_token' => $this->accessToken
+            'access_token' => $this->accessToken,
         ];
 
         // Build the URL
-        $url = self::FB_API_URL . '/me/thread_settings?' . http_build_query($params);
+        $url = self::FB_API_URL.'/me/thread_settings?'.http_build_query($params);
 
         // Serialize the content
         $content = $this->serializer->serialize($configuration, 'json');
 
         // Do the call and return the JSON response
-        return json_decode($curl->post($url, $content), true);
+        return json_decode($this->curlService->post($url, $content), true);
     }
 
     /**
      * @param $id
      * @param array $fields
+     *
      * @throws FacebookMessengerException
+     *
      * @return mixed
      */
     public function getUser($id, array $fields = ['first_name', 'last_name'])
     {
         $this->checkAccessToken();
 
-        // Init Curl
-        $curl = new Curl();
-
         // Build the URL
-        $url = self::FB_API_URL . '/' . $id;
+        $url = self::FB_API_URL.'/'.$id;
 
         // Add some params
         $params = [
             'fields' => implode($fields, ','),
-            'access_token' => $this->accessToken
+            'access_token' => $this->accessToken,
         ];
 
         // Do the call and return the JSON response
-        return json_decode($curl->get($url, $params), true);
+        return json_decode($this->curlService->get($url, $params), true);
     }
 
     /**
@@ -147,5 +149,4 @@ class FacebookMessengerService
             throw new FacebookMessengerException('The access token must be set.');
         }
     }
-
 }

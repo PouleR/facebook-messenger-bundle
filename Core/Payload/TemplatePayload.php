@@ -5,8 +5,7 @@ namespace PouleR\FacebookMessengerBundle\Core\Payload;
 use PouleR\FacebookMessengerBundle\Core\Payload;
 
 /**
- * Class TemplatePayload
- * @package PouleR\FacebookMessengerBundle\Core\Payload
+ * Class TemplatePayload.
  */
 abstract class TemplatePayload extends Payload
 {
@@ -21,6 +20,7 @@ abstract class TemplatePayload extends Payload
 
     /**
      * TemplatePayload constructor.
+     *
      * @param $templateType
      */
     public function __construct($templateType)
@@ -43,5 +43,4 @@ abstract class TemplatePayload extends Payload
     {
         $this->templateType = $templateType;
     }
-
 }

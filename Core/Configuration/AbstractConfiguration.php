@@ -3,8 +3,7 @@
 namespace PouleR\FacebookMessengerBundle\Core\Configuration;
 
 /**
- * Class AbstractConfiguration
- * @package PouleR\FacebookMessengerBundle\Core\Configuration
+ * Class AbstractConfiguration.
  */
 abstract class AbstractConfiguration implements ConfigurationInterface
 {

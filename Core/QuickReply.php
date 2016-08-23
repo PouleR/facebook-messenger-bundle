@@ -5,8 +5,7 @@ namespace PouleR\FacebookMessengerBundle\Core;
 use PouleR\FacebookMessengerBundle\Core\QuickReply\QuickReplies;
 
 /**
- * Class QuickReply
- * @package PouleR\FacebookMessengerBundle\Core
+ * Class QuickReply.
  */
 class QuickReply extends Message
 {

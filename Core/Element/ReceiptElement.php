@@ -5,8 +5,7 @@ namespace PouleR\FacebookMessengerBundle\Core\Element;
 use PouleR\FacebookMessengerBundle\Core\Element;
 
 /**
- * Class ReceiptElement
- * @package PouleR\FacebookMessengerBundle\Element
+ * Class ReceiptElement.
  */
 class ReceiptElement extends Element
 {
@@ -27,11 +26,12 @@ class ReceiptElement extends Element
 
     /**
      * ReceiptElement constructor.
+     *
      * @param string $title
      * @param string $subtitle
      * @param string $imageUrl
-     * @param int $quantity
-     * @param int $price
+     * @param int    $quantity
+     * @param int    $price
      */
     public function __construct($title = '', $subtitle = '', $imageUrl = '', $quantity = 0, $price = 0)
     {
@@ -90,5 +90,4 @@ class ReceiptElement extends Element
     {
         $this->currency = $currency;
     }
-
 }

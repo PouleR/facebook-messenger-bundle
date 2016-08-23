@@ -5,12 +5,10 @@ namespace PouleR\FacebookMessengerBundle\Core\Button;
 use PouleR\FacebookMessengerBundle\Core\Button;
 
 /**
- * Class PostbackButton
- * @package PouleR\FacebookMessengerBundle\Core\Button
+ * Class PostbackButton.
  */
 class PostbackButton extends Button
 {
-
     /**
      * @var mixed
      */
@@ -18,6 +16,7 @@ class PostbackButton extends Button
 
     /**
      * PostbackButton constructor.
+     *
      * @param string $title
      * @param string $payload
      */
@@ -45,5 +44,4 @@ class PostbackButton extends Button
     {
         $this->payload = $payload;
     }
-
 }

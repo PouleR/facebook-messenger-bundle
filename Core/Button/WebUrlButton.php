@@ -5,12 +5,10 @@ namespace PouleR\FacebookMessengerBundle\Core\Button;
 use PouleR\FacebookMessengerBundle\Core\Button;
 
 /**
- * Class WebUrlButton
- * @package PouleR\FacebookMessengerBundle\Core\Button
+ * Class WebUrlButton.
  */
 class WebUrlButton extends Button
 {
-
     /**
      * @var string
      */
@@ -18,6 +16,7 @@ class WebUrlButton extends Button
 
     /**
      * WebUrlButton constructor.
+     *
      * @param $title
      * @param $url
      */
@@ -45,5 +44,4 @@ class WebUrlButton extends Button
     {
         $this->url = $url;
     }
-
 }

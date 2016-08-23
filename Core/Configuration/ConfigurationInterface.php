@@ -3,8 +3,7 @@
 namespace PouleR\FacebookMessengerBundle\Core\Configuration;
 
 /**
- * Interface ConfigurationInterface
- * @package PouleR\FacebookMessengerBundle\Core\Configuration
+ * Interface ConfigurationInterface.
  */
 interface ConfigurationInterface
 {

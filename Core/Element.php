@@ -3,8 +3,7 @@
 namespace PouleR\FacebookMessengerBundle\Core;
 
 /**
- * Class Element
- * @package PouleR\FacebookMessengerBundle\Core
+ * Class Element.
  */
 abstract class Element implements ElementInterface
 {
@@ -25,6 +24,7 @@ abstract class Element implements ElementInterface
 
     /**
      * Element constructor.
+     *
      * @param $title
      * @param $subtitle
      * @param $imageUrl

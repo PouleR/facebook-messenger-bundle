@@ -8,18 +8,18 @@ use Symfony\Component\DependencyInjection\Loader;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
 /**
- * Class FacebookMessengerExtension
- * @package PouleR\FacebookMessengerBundle\DependencyInjection
+ * Class FacebookMessengerExtension.
  */
 class FacebookMessengerExtension extends Extension
 {
     /**
      * {@inheritdoc}
+     *
      * @throws \Exception
      */
     public function load(array $configs, ContainerBuilder $container)
     {
-        $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
+        $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yml');
     }
 }

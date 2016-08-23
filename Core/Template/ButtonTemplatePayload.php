@@ -5,8 +5,7 @@ namespace PouleR\FacebookMessengerBundle\Core\Template;
 use PouleR\FacebookMessengerBundle\Core\Payload\TemplatePayload;
 
 /**
- * Class ButtonTemplatePayload
- * @package PouleR\FacebookMessengerBundle\Core\Template
+ * Class ButtonTemplatePayload.
  */
 class ButtonTemplatePayload extends TemplatePayload
 {
@@ -22,8 +21,9 @@ class ButtonTemplatePayload extends TemplatePayload
 
     /**
      * ButtonTemplatePayload constructor.
+     *
      * @param string $text
-     * @param array $buttons
+     * @param array  $buttons
      */
     public function __construct($text = '', $buttons = [])
     {
@@ -66,5 +66,4 @@ class ButtonTemplatePayload extends TemplatePayload
     {
         $this->buttons = $buttons;
     }
-
 }

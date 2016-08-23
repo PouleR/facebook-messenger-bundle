@@ -5,13 +5,13 @@ namespace PouleR\FacebookMessengerBundle\Core\Attachment;
 use PouleR\FacebookMessengerBundle\Core\Attachment;
 
 /**
- * Class AudioAttachment
- * @package PouleR\FacebookMessengerBundle\Core\Attachment
+ * Class AudioAttachment.
  */
 class AudioAttachment extends Attachment
 {
     /**
      * AudioAttachment constructor.
+     *
      * @param $payload
      */
     public function __construct($payload = null)

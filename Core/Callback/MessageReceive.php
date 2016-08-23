@@ -6,8 +6,7 @@ use PouleR\FacebookMessengerBundle\Core\Attachment;
 use PouleR\FacebookMessengerBundle\Core\AttachmentInterface;
 
 /**
- * Class MessageReceive
- * @package PouleR\FacebookMessengerBundle\Core\Callback
+ * Class MessageReceive.
  */
 class MessageReceive
 {

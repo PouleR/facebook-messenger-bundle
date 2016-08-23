@@ -1,12 +1,11 @@
 <?php
 
-namespace PouleR\FacebookMessengerBundle\Curl;
+namespace PouleR\FacebookMessengerBundle\Service;
 
 /**
- * Class Curl
- * @package PouleR\FacebookMessengerBundle\Curl
+ * Class CurlService.
  */
-class Curl
+class CurlService implements CurlInterface
 {
     /**
      * @var resource
@@ -21,18 +20,14 @@ class Curl
     /**
      * @var array
      */
-    protected $headers;
+    protected $headers = array('Content-Type: application/json');
 
     /**
-     * Curl constructor.
-     * @param null|string $url
-     * @param array       $headers
+     * CurlService constructor.
      */
-    public function __construct($url = null, $headers = ['Content-Type: application/json'])
+    public function __construct()
     {
-        // Initialize some stuff
-        $this->ch = curl_init($url);
-        $this->headers = $headers;
+        $this->ch = curl_init();
 
         // Set default ops
         curl_setopt($this->ch, CURLOPT_HTTPHEADER, $this->headers);
@@ -42,9 +37,7 @@ class Curl
     }
 
     /**
-     * @param string $url
-     * @param string $content
-     * @return mixed
+     * {@inheritdoc}
      */
     public function post($url, $content)
     {
@@ -56,25 +49,22 @@ class Curl
     }
 
     /**
-     * @param string $url
-     * @param array  $params
-     * @return mixed
+     * {@inheritdoc}
      */
     public function get($url, array $params)
     {
-        $url .= '?' . http_build_query($params);
-        
+        $url .= '?'.http_build_query($params);
+
         curl_setopt($this->ch, CURLOPT_URL, $url);
 
         return curl_exec($this->ch);
     }
 
     /**
-     * Curl destructor
+     * Close CURL.
      */
     public function __destruct()
     {
         curl_close($this->ch);
     }
-
 }

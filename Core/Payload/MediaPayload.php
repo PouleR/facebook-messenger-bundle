@@ -5,8 +5,7 @@ namespace PouleR\FacebookMessengerBundle\Core\Payload;
 use PouleR\FacebookMessengerBundle\Core\Payload;
 
 /**
- * Class MediaPayload
- * @package PouleR\FacebookMessengerBundle\Core\Payload
+ * Class MediaPayload.
  */
 class MediaPayload extends Payload
 {
@@ -17,6 +16,7 @@ class MediaPayload extends Payload
 
     /**
      * MediaPayload constructor.
+     *
      * @param string $url
      */
     public function __construct($url = '')
@@ -39,5 +39,4 @@ class MediaPayload extends Payload
     {
         $this->url = $url;
     }
-
 }

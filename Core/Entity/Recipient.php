@@ -3,8 +3,7 @@
 namespace PouleR\FacebookMessengerBundle\Core\Entity;
 
 /**
- * Class Recipient
- * @package PouleR\FacebookMessengerBundle\Core\Entity
+ * Class Recipient.
  */
 class Recipient
 {
@@ -20,6 +19,7 @@ class Recipient
 
     /**
      * Recipient constructor.
+     *
      * @param $id
      * @param null $phoneNumber
      */

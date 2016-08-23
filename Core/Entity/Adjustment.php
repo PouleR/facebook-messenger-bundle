@@ -3,8 +3,7 @@
 namespace PouleR\FacebookMessengerBundle\Core\Entity;
 
 /**
- * Class Adjustment
- * @package PouleR\FacebookMessengerBundle\Core\Entity
+ * Class Adjustment.
  */
 class Adjustment
 {
@@ -22,7 +21,7 @@ class Adjustment
      * @param $name
      * @param $amount
      */
-    public function _construct($name, $amount)
+    public function __construct($name, $amount)
     {
         $this->name = $name;
         $this->amount = $amount;
@@ -59,5 +58,4 @@ class Adjustment
     {
         $this->amount = $amount;
     }
-
 }

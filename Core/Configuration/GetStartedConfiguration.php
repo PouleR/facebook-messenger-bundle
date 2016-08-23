@@ -3,8 +3,7 @@
 namespace PouleR\FacebookMessengerBundle\Core\Configuration;
 
 /**
- * Class GetStartedConfiguration
- * @package PouleR\FacebookMessengerBundle\Core\Configuration
+ * Class GetStartedConfiguration.
  */
 class GetStartedConfiguration extends AbstractConfiguration
 {

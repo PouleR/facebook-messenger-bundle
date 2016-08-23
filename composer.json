@@ -3,9 +3,7 @@
     "description": "A Symfony bundle for Facebook Messenger",
     "type": "",
     "autoload": {
-        "psr-4": {
-            "": "src/"
-        }
+        "psr-4": { "PouleR\\FacebookMessengerBundle\\": "" }
     },
     "require": {
         "php": ">=5.3.0",
@@ -19,5 +17,10 @@
             "email": "paulradt@gmail.com"
         }
     ],
-    "minimum-stability": "stable"
+    "minimum-stability": "stable",
+    "require-dev": {
+        "phpunit/phpunit": "5.5.*",
+        "friendsofphp/php-cs-fixer": "^1.11",
+        "squizlabs/php_codesniffer": "^2.6"
+    }
 }

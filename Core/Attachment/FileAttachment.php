@@ -5,13 +5,13 @@ namespace PouleR\FacebookMessengerBundle\Core\Attachment;
 use PouleR\FacebookMessengerBundle\Core\Attachment;
 
 /**
- * Class FileAttachment
- * @package PouleR\FacebookMessengerBundle\Core\Attachment
+ * Class FileAttachment.
  */
 class FileAttachment extends Attachment
 {
     /**
      * FileAttachment constructor.
+     *
      * @param $payload
      */
     public function __construct($payload = null)

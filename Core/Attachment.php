@@ -3,8 +3,7 @@
 namespace PouleR\FacebookMessengerBundle\Core;
 
 /**
- * Class Attachment
- * @package PouleR\FacebookMessengerBundle\Core
+ * Class Attachment.
  */
 abstract class Attachment implements AttachmentInterface
 {
@@ -26,6 +25,7 @@ abstract class Attachment implements AttachmentInterface
 
     /**
      * Attachment constructor.
+     *
      * @param $type
      * @param $payload
      */

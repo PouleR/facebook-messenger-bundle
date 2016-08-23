@@ -3,8 +3,7 @@
 namespace PouleR\FacebookMessengerBundle\Core;
 
 /**
- * Class Message
- * @package PouleR\FacebookMessengerBundle\Core
+ * Class Message.
  */
 class Message
 {
@@ -20,7 +19,8 @@ class Message
 
     /**
      * Message constructor.
-     * @param string $text
+     *
+     * @param string                   $text
      * @param AttachmentInterface|null $attachment
      */
     public function __construct($text = '', AttachmentInterface $attachment = null)
@@ -60,5 +60,4 @@ class Message
     {
         $this->attachment = $attachment;
     }
-
 }

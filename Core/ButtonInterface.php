@@ -3,17 +3,15 @@
 namespace PouleR\FacebookMessengerBundle\Core;
 
 /**
- * Interface ButtonInterface
- * @package PouleR\FacebookMessengerBundle\Core
+ * Interface ButtonInterface.
  */
 interface ButtonInterface
 {
-
     /**
      * @return string
      */
     public function getType();
-    
+
     /**
      * @return string
      */
@@ -23,5 +21,4 @@ interface ButtonInterface
      * @param string $title
      */
     public function setTitle($title);
-
 }

@@ -22,10 +22,9 @@ use PouleR\FacebookMessengerBundle\Core\Template\ReceiptTemplatePayload;
 use PouleR\FacebookMessengerBundle\Core\Message;
 
 /**
- * Class Example
- * @package PouleR\FacebookMessengerBundle
+ * Class Example.
  */
-class Example
+class example
 {
     /**
      * @var array
@@ -73,7 +72,7 @@ class Example
 
     /**
      * @return Message
-     * Generate a plain text message
+     *                 Generate a plain text message
      */
     public function generateTextMessage()
     {
@@ -89,7 +88,7 @@ class Example
 
     /**
      * @return Message
-     * Generate a image message
+     *                 Generate a image message
      */
     public function generateImageMessage()
     {
@@ -112,7 +111,7 @@ class Example
 
     /**
      * @return Message
-     * Generate a button message
+     *                 Generate a button message
      */
     public function generateButtonMessage()
     {
@@ -136,7 +135,7 @@ class Example
 
     /**
      * @return Message
-     * Generate a generic message
+     *                 Generate a generic message
      */
     public function generateGenericMessage()
     {
@@ -172,7 +171,7 @@ class Example
 
     /**
      * @return Message
-     * Generate a receipt message
+     *                 Generate a receipt message
      */
     public function generateReceiptMessage()
     {
@@ -193,12 +192,12 @@ class Example
 
         // Create an address
         $address = new Address();
-        $address->setStreet1("1 Hacker Way");
-        $address->setStreet2("");
-        $address->setCountry("US");
-        $address->setState("CA");
-        $address->setCity("Menlo Park");
-        $address->setPostalCode("94025");
+        $address->setStreet1('1 Hacker Way');
+        $address->setStreet2('');
+        $address->setCountry('US');
+        $address->setState('CA');
+        $address->setCity('Menlo Park');
+        $address->setPostalCode('94025');
 
         // Create a few receipt elements
         $receiptElementOne = new ReceiptElement();
@@ -218,11 +217,11 @@ class Example
         $receiptElementTwo->setPrice(100.00);
 
         // Create a few payment adjustments
-        $adjustmentOne =  new Adjustment();
+        $adjustmentOne = new Adjustment();
         $adjustmentOne->setName('Discount One');
         $adjustmentOne->setAmount(50);
 
-        $adjustmentTwo =  new Adjustment();
+        $adjustmentTwo = new Adjustment();
         $adjustmentTwo->setName('Discount Two');
         $adjustmentTwo->setAmount(100);
 
@@ -249,7 +248,7 @@ class Example
 
     /**
      * @return QuickReply
-     * Generate a QuickReply message
+     *                    Generate a QuickReply message
      */
     public function generateQuickReply()
     {
@@ -271,4 +270,3 @@ class Example
         return $message;
     }
 }
-

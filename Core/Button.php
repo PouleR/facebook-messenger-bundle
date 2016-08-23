@@ -3,8 +3,7 @@
 namespace PouleR\FacebookMessengerBundle\Core;
 
 /**
- * Class Button
- * @package PouleR\FacebookMessengerBundle\Core
+ * Class Button.
  */
 abstract class Button implements ButtonInterface
 {
@@ -23,6 +22,7 @@ abstract class Button implements ButtonInterface
 
     /**
      * Button constructor.
+     *
      * @param $type
      * @param $title
      */

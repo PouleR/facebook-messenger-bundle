@@ -3,8 +3,7 @@
 namespace PouleR\FacebookMessengerBundle\Core\Callback;
 
 /**
- * Class PayloadReceive
- * @package PouleR\FacebookMessengerBundle\Core\Callback
+ * Class PayloadReceive.
  */
 class PayloadReceive
 {

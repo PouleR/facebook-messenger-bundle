@@ -3,8 +3,7 @@
 namespace PouleR\FacebookMessengerBundle\Core\Configuration;
 
 /**
- * Class GreetingTextConfiguration
- * @package PouleR\FacebookMessengerBundle\Core\Configuration
+ * Class GreetingTextConfiguration.
  */
 class GreetingTextConfiguration extends AbstractConfiguration
 {

@@ -3,8 +3,7 @@
 namespace PouleR\FacebookMessengerBundle\Core;
 
 /**
- * Interface ElementInterface
- * @package PouleR\FacebookMessengerBundle\Core
+ * Interface ElementInterface.
  */
 interface ElementInterface
 {

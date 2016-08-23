@@ -3,8 +3,7 @@
 namespace PouleR\FacebookMessengerBundle\Core;
 
 /**
- * Class Payload
- * @package PouleR\FacebookMessengerBundle\Core
+ * Class Payload.
  */
 abstract class Payload
 {

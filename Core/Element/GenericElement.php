@@ -5,8 +5,7 @@ namespace PouleR\FacebookMessengerBundle\Core\Element;
 use PouleR\FacebookMessengerBundle\Core\Element;
 
 /**
- * Class GenericElement
- * @package PouleR\FacebookMessengerBundle\Element
+ * Class GenericElement.
  */
 class GenericElement extends Element
 {
@@ -22,11 +21,12 @@ class GenericElement extends Element
 
     /**
      * GenericElement constructor.
+     *
      * @param string $title
      * @param string $subtitle
      * @param string $imageUrl
      * @param string $itemUrl
-     * @param array $buttons
+     * @param array  $buttons
      */
     public function __construct($title = '', $subtitle = '', $imageUrl = '', $itemUrl = '', $buttons = [])
     {
