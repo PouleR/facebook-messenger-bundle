@@ -32,7 +32,7 @@ class CurlServiceTest extends \PHPUnit_Framework_TestCase
                 [1, CURLOPT_POST, 1],
                 [1, CURLOPT_POSTFIELDS, 'body'],
                 [1, CURLOPT_URL, 'http://www.facebook.com?client_id=unit&client_secret=test']
-        );
+            );
 
         $curlExec = $this->getFunctionMock('PouleR\FacebookMessengerBundle\Service', 'curl_exec');
         $curlExec->expects($this->exactly(2))
