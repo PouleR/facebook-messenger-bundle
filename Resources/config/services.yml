@@ -3,4 +3,4 @@ services:
         class: PouleR\FacebookMessengerBundle\Service\CurlService
     pouler.facebookmessenger.service:
         class: PouleR\FacebookMessengerBundle\Service\FacebookMessengerService
-        arguments: ["@poule.curl.service"]
+        arguments: ["@pouler.curl.service"]
