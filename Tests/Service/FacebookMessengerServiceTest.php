@@ -1,6 +1,6 @@
 <?php
 
-namespace PouleR\FacebookMessengerBundle\Tests;
+namespace PouleR\FacebookMessengerBundle\Tests\Service;
 
 use PouleR\FacebookMessengerBundle\Core\Configuration\GetStartedConfiguration;
 use PouleR\FacebookMessengerBundle\Core\Configuration\GreetingTextConfiguration;
