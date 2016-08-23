@@ -24,7 +24,7 @@ use PouleR\FacebookMessengerBundle\Core\Message;
 /**
  * Class Example.
  */
-class example
+class Example
 {
     /**
      * @var array
