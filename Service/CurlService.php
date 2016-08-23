@@ -13,11 +13,6 @@ class CurlService implements CurlInterface
     protected $ch;
 
     /**
-     * @var string
-     */
-    protected $url;
-
-    /**
      * @var array
      */
     protected $headers = array('Content-Type: application/json');
