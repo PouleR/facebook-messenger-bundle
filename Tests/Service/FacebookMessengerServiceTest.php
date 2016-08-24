@@ -8,6 +8,7 @@ use PouleR\FacebookMessengerBundle\Core\Entity\Recipient;
 use PouleR\FacebookMessengerBundle\Core\Message;
 use PouleR\FacebookMessengerBundle\Service\CurlService;
 use PouleR\FacebookMessengerBundle\Service\FacebookMessengerService;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Class FacebookMessengerServiceTest.
@@ -122,5 +123,81 @@ class FacebookMessengerServiceTest extends \PHPUnit_Framework_TestCase
 
         self::assertEquals('Unit', $result['first_name']);
         self::assertEquals('Test', $result['last_name']);
+    }
+
+    /**
+     * Test if null is returned when there is no hub_mode set in the request
+     */
+    public function testEmptyVerificationToken()
+    {
+        $request = $this->getMockBuilder(Request::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $request->expects($this->exactly(1))
+            ->method('get')
+            ->withConsecutive(['hub_mode'])
+            ->willReturnOnConsecutiveCalls(null);
+
+        $service = new FacebookMessengerService(new CurlService());
+        $challenge = $service->handleVerificationToken($request, '12345');
+        self::assertNull($challenge);
+    }
+
+    /**
+     * Test if an exception is thrown when the verification token is incorrect
+     *
+     * @expectedException \PouleR\FacebookMessengerBundle\Exception\FacebookMessengerException
+     */
+    public function testInvalidVerificationToken()
+    {
+        $request = $this->getMockBuilder(Request::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $request->expects($this->exactly(3))
+            ->method('get')
+            ->withConsecutive(
+                ['hub_mode'],
+                ['hub_mode'],
+                ['hub_verify_token']
+            )
+            ->willReturnOnConsecutiveCalls(
+                'subscribe',
+                'subscribe',
+                '12345'
+            );
+
+        $service = new FacebookMessengerService(new CurlService());
+        $service->handleVerificationToken($request, '98765');
+    }
+
+    /**
+     * Test a valid verification token
+     */
+    public function testValidVerificationToken()
+    {
+        $request = $this->getMockBuilder(Request::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $request->expects($this->exactly(4))
+            ->method('get')
+            ->withConsecutive(
+                ['hub_mode'],
+                ['hub_mode'],
+                ['hub_verify_token'],
+                ['hub_challenge']
+            )
+            ->willReturnOnConsecutiveCalls(
+                'subscribe',
+                'subscribe',
+                '12345',
+                'challenge_code'
+            );
+
+        $service = new FacebookMessengerService(new CurlService());
+        $challenge = $service->handleVerificationToken($request, '12345');
+        self::assertEquals('challenge_code', $challenge);
     }
 }

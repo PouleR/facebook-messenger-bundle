@@ -6,6 +6,7 @@ use PouleR\FacebookMessengerBundle\Core\Configuration\ConfigurationInterface;
 use PouleR\FacebookMessengerBundle\Core\Entity\Recipient;
 use PouleR\FacebookMessengerBundle\Core\Message;
 use PouleR\FacebookMessengerBundle\Exception\FacebookMessengerException;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\NameConverter\CamelCaseToSnakeCaseNameConverter;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
@@ -16,6 +17,11 @@ use Symfony\Component\Serializer\Serializer;
  */
 class FacebookMessengerService
 {
+    const VERIFY_KEY_HUB_MODE = 'hub_mode';
+    const VERIFY_KEY_TOKEN = 'hub_verify_token';
+    const VERIFY_KEY_HUB_CHALLENGE = 'hub_challenge';
+    const VERIFY_VAL_SUBSCRIBE = 'subscribe';
+
     const FB_API_URL = 'https://graph.facebook.com/v2.6';
 
     /**
@@ -138,6 +144,29 @@ class FacebookMessengerService
 
         // Do the call and return the JSON response
         return json_decode($this->curlService->get($url, $params), true);
+    }
+
+    /**
+     * Handle a verification token request, check against the given verificationToken.
+     * Throw an exception when the token is invalid, or return null when the request isn't a verification request.
+     *
+     * @param Request $request
+     * @param string  $verificationToken
+     * @return string|null
+     * @throws FacebookMessengerException
+     */
+    public function handleVerificationToken(Request $request, $verificationToken)
+    {
+        if (!empty($request->get(self::VERIFY_KEY_HUB_MODE))) {
+            if ($request->get(self::VERIFY_KEY_HUB_MODE) === self::VERIFY_VAL_SUBSCRIBE &&
+                $request->get(self::VERIFY_KEY_TOKEN) === $verificationToken) {
+                return $request->get(self::VERIFY_KEY_HUB_CHALLENGE);
+            }
+
+            throw new FacebookMessengerException('Invalid verification token');
+        }
+
+        return null;
     }
 
     /**
