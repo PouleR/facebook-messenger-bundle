@@ -3,13 +3,14 @@
 namespace PouleR\FacebookMessengerBundle\Tests\Service;
 
 use phpmock\phpunit\PHPMock;
+use PHPUnit\Framework\TestCase;
 use PouleR\FacebookMessengerBundle\Service\CurlInterface;
 use PouleR\FacebookMessengerBundle\Service\CurlService;
 
 /**
  * Class FacebookMessengerServiceTest.
  */
-class CurlServiceTest extends \PHPUnit_Framework_TestCase
+class CurlServiceTest extends TestCase
 {
     use PHPMock;
 

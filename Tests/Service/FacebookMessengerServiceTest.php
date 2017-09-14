@@ -2,6 +2,7 @@
 
 namespace PouleR\FacebookMessengerBundle\Tests\Service;
 
+use PHPUnit\Framework\TestCase;
 use PouleR\FacebookMessengerBundle\Core\Configuration\GetStartedConfiguration;
 use PouleR\FacebookMessengerBundle\Core\Configuration\GreetingTextConfiguration;
 use PouleR\FacebookMessengerBundle\Core\Entity\Recipient;
@@ -13,7 +14,7 @@ use Symfony\Component\HttpFoundation\Request;
 /**
  * Class FacebookMessengerServiceTest.
  */
-class FacebookMessengerServiceTest extends \PHPUnit_Framework_TestCase
+class FacebookMessengerServiceTest extends TestCase
 {
     /**
      * @expectedException \PouleR\FacebookMessengerBundle\Exception\FacebookMessengerException
