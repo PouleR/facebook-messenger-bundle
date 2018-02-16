@@ -3,47 +3,59 @@
 namespace PouleR\FacebookMessengerBundle\Core\Button;
 
 use PouleR\FacebookMessengerBundle\Core\Button;
+use PouleR\FacebookMessengerBundle\Core\ButtonInterface;
 
 /**
  * Class LoginButton.
  */
-class LoginButton extends Button
+class LoginButton implements ButtonInterface
 {
+    /**
+     * @var string
+     */
+    protected $type;
+
     /**
      * @var string|null
      */
-    protected $loginUrl;
+    protected $url;
 
     /**
      * LoginButton constructor.
      *
-     * @param string      $title
      * @param string|null $loginUrl
      */
-    public function __construct(string $title = '', $loginUrl = null)
+    public function __construct($loginUrl = null)
     {
-        parent::__construct(Button::TYPE_POSTBACK, $title);
+        $this->type = Button::TYPE_ACCOUNT_LINK;
+        $this->setUrl($loginUrl);
+    }
 
-        $this->setLoginUrl($loginUrl);
+    /**
+     * @param null $url
+     *
+     * @return $this
+     */
+    public function setUrl($url = null)
+    {
+        $this->url = $url;
+
+        return $this;
     }
 
     /**
      * @return null|string
      */
-    public function getLoginUrl()
+    public function getUrl()
     {
-        return $this->loginUrl;
+        return $this->url;
     }
 
     /**
-     * @param string|null $loginUrl
-     *
-     * @return $this
+     * @return string
      */
-    public function setLoginUrl($loginUrl = null)
+    public function getType()
     {
-        $this->loginUrl = $loginUrl;
-
-        return $this;
+        return $this->type;
     }
 }
