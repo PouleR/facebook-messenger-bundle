@@ -9,6 +9,7 @@ abstract class Button implements ButtonInterface
 {
     const TYPE_WEB_URL = 'web_url';
     const TYPE_POSTBACK = 'postback';
+    const TYPE_ACCOUNT_LINK = 'account_link';
 
     /**
      * @var string
@@ -23,8 +24,8 @@ abstract class Button implements ButtonInterface
     /**
      * Button constructor.
      *
-     * @param $type
-     * @param $title
+     * @param string $type
+     * @param string $title
      */
     public function __construct($type, $title = '')
     {
