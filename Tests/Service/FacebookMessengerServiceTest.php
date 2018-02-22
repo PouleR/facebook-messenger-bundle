@@ -127,6 +127,34 @@ class FacebookMessengerServiceTest extends TestCase
     }
 
     /**
+     * Test retrieving a PSID
+     *
+     * @throws \PouleR\FacebookMessengerBundle\Exception\FacebookMessengerException
+     */
+    public function testGetPsid()
+    {
+        $curlService = $this->createMock(CurlService::class);
+        $curlService->expects(self::once())
+            ->method('get')
+            ->with(
+                'https://graph.facebook.com/v2.6/me',
+                array(
+                    'fields' => 'recipient',
+                    'account_linking_token' => 'tokenabc',
+                    'access_token' => 'token',
+                )
+            )
+            ->willReturn('{"id": 1,"recipient":2}');
+
+        $service = new FacebookMessengerService($curlService);
+        $service->setAccessToken('token');
+        $result = $service->getPsid('tokenabc');
+
+        self::assertEquals(1, $result['id']);
+        self::assertEquals(2, $result['recipient']);
+    }
+
+    /**
      * Test if null is returned when there is no hub_mode set in the request
      */
     public function testEmptyVerificationToken()

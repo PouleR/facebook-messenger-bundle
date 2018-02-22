@@ -147,6 +147,29 @@ class FacebookMessengerService
     }
 
     /**
+     * Get a user's PSID for account linking
+     *
+     * @param $linkingToken
+     *
+     * @return mixed
+     *
+     * @throws FacebookMessengerException
+     */
+    public function getPsid($linkingToken)
+    {
+        $this->checkAccessToken();
+
+        $url = self::FB_API_URL.'/me';
+        $params = [
+            'fields' => 'recipient',
+            'account_linking_token' => $linkingToken,
+            'access_token' => $this->accessToken,
+        ];
+
+        return json_decode($this->curlService->get($url, $params), true);
+    }
+
+    /**
      * Handle a verification token request, check against the given verificationToken.
      * Throw an exception when the token is invalid, or return null when the request isn't a verification request.
      *
