@@ -170,6 +170,32 @@ class FacebookMessengerService
     }
 
     /**
+     * Account Unlink
+     *
+     * @param string|int $psid
+     *
+     * @return mixed
+     *
+     * @throws FacebookMessengerException
+     */
+    public function unlinkAccount($psid)
+    {
+        $this->checkAccessToken();
+
+        $params = [
+            'access_token' => $this->accessToken,
+        ];
+
+        $content = $this->serializer->serialize([
+            'psid' => $psid,
+        ], 'json');
+
+        $url = self::FB_API_URL.'/me/unlink_accounts?'.http_build_query($params);
+
+        return json_decode($this->curlService->post($url, $content), true);
+    }
+
+    /**
      * Handle a verification token request, check against the given verificationToken.
      * Throw an exception when the token is invalid, or return null when the request isn't a verification request.
      *

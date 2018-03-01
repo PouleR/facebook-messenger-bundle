@@ -155,6 +155,30 @@ class FacebookMessengerServiceTest extends TestCase
     }
 
     /**
+     * Test unlink an account
+     *
+     * @throws \PouleR\FacebookMessengerBundle\Exception\FacebookMessengerException
+     */
+    public function testUnlinkAccount()
+    {
+        $curlService = $this->createMock(CurlService::class);
+        $curlService->expects(self::once())
+            ->method('post')
+            ->with(
+                'https://graph.facebook.com/v2.6/me/unlink_accounts?access_token=token',
+                '{"psid":"PSID"}'
+            )
+            ->willReturn('{"result": "unlink account success"}');
+
+        $service = new FacebookMessengerService($curlService);
+        $service->setAccessToken('token');
+
+        $result = $service->unlinkAccount('PSID');
+
+        self::assertEquals('unlink account success', $result['result']);
+    }
+
+    /**
      * Test if null is returned when there is no hub_mode set in the request
      */
     public function testEmptyVerificationToken()
