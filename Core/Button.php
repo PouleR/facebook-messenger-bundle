@@ -10,6 +10,7 @@ abstract class Button implements ButtonInterface
     const TYPE_WEB_URL = 'web_url';
     const TYPE_POSTBACK = 'postback';
     const TYPE_ACCOUNT_LINK = 'account_link';
+    const TYPE_ACCOUNT_UNLINK = 'account_unlink';
 
     /**
      * @var string
