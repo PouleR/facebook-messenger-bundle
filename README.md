@@ -1,7 +1,7 @@
 Facebook Messenger Bundle
 =====================
 [![Build Status](https://travis-ci.org/PouleR/facebook-messenger-bundle.svg?branch=master)](https://travis-ci.org/PouleR/facebook-messenger-bundle)
-[![SensioLabsInsight](https://insight.sensiolabs.com/projects/d73f014e-f193-4c88-a6e0-77f9323d3440/mini.png)](https://insight.sensiolabs.com/projects/6027a50f-06cf-4989-8267-9f481e838b2a)
+[![SensioLabsInsight](https://insight.sensiolabs.com/projects/d73f014e-f193-4c88-a6e0-77f9323d3440/mini.png)](https://insight.sensiolabs.com/projects/d73f014e-f193-4c88-a6e0-77f9323d3440)
 
 [![Latest Stable Version](https://poser.pugx.org/pouler/facebook-messenger-bundle/v/stable)](https://packagist.org/packages/pouler/facebook-messenger-bundle)
 [![Total Downloads](https://poser.pugx.org/pouler/facebook-messenger-bundle/downloads)](https://packagist.org/packages/pouler/facebook-messenger-bundle)
