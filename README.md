@@ -66,6 +66,19 @@ $message = new Message('Hi there, this is a test');
 $service->postMessage($recipient, $message);
 ```
 
+### Use batch requests to send a text message to different users (by PSID)
+``` php
+$service = new FacebookMessengerService('...', '...', new NullLogger());
+$service->setAccessToken('PAGE_ACCESS_TOKEN');
+
+$message = new Message('Hi there, this is a batch message');
+$service->addMessageToBatch(new Recipient('PSID1'), $message);
+$service->addMessageToBatch(new Recipient('PSID2'), $message);
+$service->addMessageToBatch(new Recipient('PSID3'), $message);
+
+$service->sendBatchRequests();
+```
+
 ### Create a generic template message
 ``` php
 $message = new Message();

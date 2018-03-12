@@ -20,8 +20,8 @@ class Configuration implements ConfigurationInterface
 
         $rootNode
             ->children()
-                ->scalarNode('app_id')->end()
-                ->scalarNode('app_secret')->end()
+                ->scalarNode('app_id')->defaultValue('fb_app_id')->end()
+                ->scalarNode('app_secret')->defaultValue('fb_app_secret')->end()
             ->end()
         ;
 
