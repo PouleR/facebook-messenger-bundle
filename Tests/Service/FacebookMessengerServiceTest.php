@@ -2,14 +2,20 @@
 
 namespace PouleR\FacebookMessengerBundle\Tests\Service;
 
+use GuzzleHttp\Client;
+use GuzzleHttp\Handler\MockHandler;
+use GuzzleHttp\HandlerStack;
+use GuzzleHttp\Middleware;
+use GuzzleHttp\Psr7\Request;
+use GuzzleHttp\Psr7\Response;
 use PHPUnit\Framework\TestCase;
 use PouleR\FacebookMessengerBundle\Core\Configuration\GetStartedConfiguration;
 use PouleR\FacebookMessengerBundle\Core\Configuration\GreetingTextConfiguration;
 use PouleR\FacebookMessengerBundle\Core\Entity\Recipient;
 use PouleR\FacebookMessengerBundle\Core\Message;
-use PouleR\FacebookMessengerBundle\Service\CurlService;
 use PouleR\FacebookMessengerBundle\Service\FacebookMessengerService;
-use Symfony\Component\HttpFoundation\Request;
+use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;
 
 /**
  * Class FacebookMessengerServiceTest.
@@ -17,183 +23,186 @@ use Symfony\Component\HttpFoundation\Request;
 class FacebookMessengerServiceTest extends TestCase
 {
     /**
-     * @expectedException \PouleR\FacebookMessengerBundle\Exception\FacebookMessengerException
+     * @var LoggerInterface|\PHPUnit_Framework_MockObject_MockObject
      */
-    public function testPostMessageWithoutAccessToken()
+    protected $logger;
+
+    /**
+     * @var array
+     */
+    protected $requestContainer = [];
+
+    /**
+     * @var MockHandler
+     */
+    protected $clientHandler;
+
+    /**
+     * @var FacebookMessengerService
+     */
+    protected $messengerService;
+
+    /**
+     * @throws \Facebook\Exceptions\FacebookSDKException
+     */
+    public function setUp()
     {
-        $recipient = new Recipient(1);
-        $message = new Message('Test');
-        $service = new FacebookMessengerService(new CurlService());
-        $service->postMessage($recipient, $message);
+        $this->logger = $this->createMock(LoggerInterface::class);
+        $this->clientHandler = new MockHandler();
+        $this->requestContainer = [];
+
+        $history = Middleware::history($this->requestContainer);
+        $stack = HandlerStack::create($this->clientHandler);
+        $stack->push($history);
+
+        $this->messengerService = new FacebookMessengerService('app.id', 'app.secret', new NullLogger(), new Client(['handler' => $stack]));
+        $this->messengerService->setAccessToken('access.token');
     }
 
     /**
-     * @expectedException \PouleR\FacebookMessengerBundle\Exception\FacebookMessengerException
+     * @throws \Facebook\Exceptions\FacebookSDKException
      */
-    public function testPostConfigurationWithoutAccessToken()
+    public function testPostMessage()
     {
-        $configuration = new GreetingTextConfiguration();
-        $service = new FacebookMessengerService(new CurlService());
-        $service->postConfiguration($configuration);
+        $this->clientHandler->append(new Response());
+        $this->messengerService->postMessage(new Recipient(1), new Message('Test'), FacebookMessengerService::MSG_TYPE_RESPONSE);
+
+        /** @var Request $request */
+        $request = $this->requestContainer[0]['request'];
+        self::assertEquals('POST', $request->getMethod());
+        self::assertEquals('/v2.10/me/messages', $request->getUri()->getPath());
+
+        parse_str($request->getBody(), $requestBody);
+        self::assertEquals('{"id":1,"phone_number":null}', $requestBody['recipient']);
+        self::assertEquals('{"text":"Test","attachment":null}', $requestBody['message']);
+        self::assertEquals('RESPONSE', $requestBody['type']);
+        self::assertEquals('access.token', $requestBody['access_token']);
     }
 
     /**
-     * Test the postConfiguration function for a welcome text
-     */
-    public function testPostGreetingTextConfiguration()
-    {
-        $curlService = $this->getMockBuilder(CurlService::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $curlService->expects($this->once())
-            ->method('post')
-            ->with(
-                'https://graph.facebook.com/v2.6/me/thread_settings?access_token=accessToken',
-                '{"greeting":{"text":"Hello there!"},"setting_type":"greeting"}'
-            )
-            ->willReturn('{"result": "Successfully changed thread settings"}');
-
-        $service = new FacebookMessengerService($curlService);
-        $service->setAccessToken('accessToken');
-
-        $configuration = new GreetingTextConfiguration();
-        $configuration->setGreetingText('Hello there!');
-        $result = $service->postConfiguration($configuration);
-
-        self::assertEquals('Successfully changed thread settings', $result['result']);
-    }
-
-    /**
-     * Test the postConfiguration function for a get started button
-     */
-    public function testPostGetStartedConfiguration()
-    {
-        $curlService = $this->getMockBuilder(CurlService::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $curlService->expects($this->once())
-            ->method('post')
-            ->with(
-                'https://graph.facebook.com/v2.6/me/thread_settings?access_token=accessToken',
-                // @codingStandardsIgnoreLine
-                '{"thread_state":"new_thread","call_to_actions":[{"payload":"Payload"}],"setting_type":"call_to_actions"}'
-            )
-            ->willReturn('{"result": "Successfully added new_thread\'s CTAs"}');
-
-        $service = new FacebookMessengerService($curlService);
-        $service->setAccessToken('accessToken');
-
-        $configuration = new GetStartedConfiguration();
-        $configuration->setPayload('Payload');
-        $result = $service->postConfiguration($configuration);
-
-        self::assertEquals('Successfully added new_thread\'s CTAs', $result['result']);
-    }
-
-    /**
-     * @expectedException \PouleR\FacebookMessengerBundle\Exception\FacebookMessengerException
-     */
-    public function testGetUserWithoutAccessToken()
-    {
-        $service = new FacebookMessengerService(new CurlService());
-        $service->getUser(1);
-    }
-
-    /**
-     * Test the getUser function and stub the response from Facebook
+     * @throws \Facebook\Exceptions\FacebookSDKException
      */
     public function testGetUser()
     {
-        $curlService = $this->getMockBuilder(CurlService::class)
-            ->disableOriginalConstructor()
-            ->getMock();
+        $this->clientHandler->append(new Response(
+            200,
+            [],
+            json_encode(['first_name' => 'Unit', 'last_name' => 'Test'])
+        ));
+        $result = $this->messengerService->getUser(4001);
 
-        $curlService->expects($this->once())
-            ->method('get')
-            ->with(
-                'https://graph.facebook.com/v2.6/456789',
-                array('fields' => 'first_name,last_name', 'access_token' => 'token')
-            )
-            ->willReturn('{"first_name": "Unit","last_name": "Test"}');
-
-        $service = new FacebookMessengerService($curlService);
-        $service->setAccessToken('token');
-        $result = $service->getUser(456789);
+        /** @var Request $request */
+        $request = $this->requestContainer[0]['request'];
+        self::assertEquals('GET', $request->getMethod());
+        self::assertEquals('/v2.10/4001', $request->getUri()->getPath());
 
         self::assertEquals('Unit', $result['first_name']);
         self::assertEquals('Test', $result['last_name']);
     }
 
     /**
-     * Test retrieving a PSID
-     *
-     * @throws \PouleR\FacebookMessengerBundle\Exception\FacebookMessengerException
+     * @throws \Facebook\Exceptions\FacebookSDKException
      */
     public function testGetPsid()
     {
-        $curlService = $this->createMock(CurlService::class);
-        $curlService->expects(self::once())
-            ->method('get')
-            ->with(
-                'https://graph.facebook.com/v2.6/me',
-                array(
-                    'fields' => 'recipient',
-                    'account_linking_token' => 'tokenabc',
-                    'access_token' => 'token',
-                )
-            )
-            ->willReturn('{"id": 1,"recipient":2}');
+        $this->clientHandler->append(new Response(
+            200,
+            [],
+            json_encode(['id' => 'PAGE_ID', 'recipient' => 'PSID'])
+        ));
+        $result = $this->messengerService->getPsid('linking_token');
 
-        $service = new FacebookMessengerService($curlService);
-        $service->setAccessToken('token');
-        $result = $service->getPsid('tokenabc');
+        /** @var Request $request */
+        $request = $this->requestContainer[0]['request'];
+        self::assertEquals('GET', $request->getMethod());
+        self::assertEquals('/v2.10/me', $request->getUri()->getPath());
 
-        self::assertEquals(1, $result['id']);
-        self::assertEquals(2, $result['recipient']);
+        parse_str($request->getUri()->getQuery(), $requestParams);
+        self::assertEquals('linking_token', $requestParams['account_linking_token']);
+        self::assertEquals('recipient', $requestParams['fields']);
+
+        self::assertEquals('PAGE_ID', $result['id']);
+        self::assertEquals('PSID', $result['recipient']);
     }
 
     /**
-     * Test unlink an account
-     *
-     * @throws \PouleR\FacebookMessengerBundle\Exception\FacebookMessengerException
+     * @throws \Facebook\Exceptions\FacebookSDKException
      */
     public function testUnlinkAccount()
     {
-        $curlService = $this->createMock(CurlService::class);
-        $curlService->expects(self::once())
-            ->method('post')
-            ->with(
-                'https://graph.facebook.com/v2.6/me/unlink_accounts?access_token=token',
-                '{"psid":"PSID"}'
-            )
-            ->willReturn('{"result": "unlink account success"}');
+        $this->clientHandler->append(new Response(
+            200,
+            [],
+            json_encode(['result' => 'unlink account success'])
+        ));
+        $result = $this->messengerService->unlinkAccount(123456);
 
-        $service = new FacebookMessengerService($curlService);
-        $service->setAccessToken('token');
+        /** @var Request $request */
+        $request = $this->requestContainer[0]['request'];
+        self::assertEquals('POST', $request->getMethod());
+        self::assertEquals('/v2.10/me/unlink_accounts', $request->getUri()->getPath());
 
-        $result = $service->unlinkAccount('PSID');
-
+        parse_str($request->getBody(), $requestParams);
+        self::assertEquals(123456, $requestParams['psid']);
         self::assertEquals('unlink account success', $result['result']);
     }
 
     /**
+     * @throws \Facebook\Exceptions\FacebookSDKException
+     */
+    public function testGetStarted()
+    {
+        $this->clientHandler->append(new Response());
+
+        $getStarted = new GetStartedConfiguration();
+        $getStarted->setPayload('payload');
+        $this->messengerService->setGetStarted($getStarted);
+
+        /** @var Request $request */
+        $request = $this->requestContainer[0]['request'];
+        self::assertEquals('POST', $request->getMethod());
+        self::assertEquals('/v2.10/me/messenger_profile', $request->getUri()->getPath());
+
+        parse_str($request->getBody(), $requestParams);
+        self::assertEquals('{"payload":"payload"}', $requestParams['get_started']);
+    }
+
+    /**
+     * @throws \Facebook\Exceptions\FacebookSDKException
+     */
+    public function testGreetingText()
+    {
+        $this->clientHandler->append(new Response());
+
+        $greeting = new GreetingTextConfiguration();
+        $greeting->setText('Hello');
+        $greeting->setLocale('en_US');
+        $this->messengerService->setGreetingText($greeting);
+
+        /** @var Request $request */
+        $request = $this->requestContainer[0]['request'];
+        self::assertEquals('POST', $request->getMethod());
+        self::assertEquals('/v2.10/me/messenger_profile', $request->getUri()->getPath());
+
+        parse_str($request->getBody(), $requestParams);
+        self::assertEquals(['{"text":"Hello","locale":"en_US"}'], $requestParams['greeting']);
+    }
+
+    /**
      * Test if null is returned when there is no hub_mode set in the request
+     *
+     * @throws \PouleR\FacebookMessengerBundle\Exception\FacebookMessengerException
      */
     public function testEmptyVerificationToken()
     {
-        $request = $this->getMockBuilder(Request::class)
-            ->disableOriginalConstructor()
-            ->getMock();
+        $request = $this->createMock(\Symfony\Component\HttpFoundation\Request::class);
 
         $request->expects($this->exactly(1))
             ->method('get')
             ->withConsecutive(['hub_mode'])
             ->willReturnOnConsecutiveCalls(null);
 
-        $service = new FacebookMessengerService(new CurlService());
-        $challenge = $service->handleVerificationToken($request, '12345');
+        $challenge = $this->messengerService->handleVerificationToken($request, '12345');
         self::assertNull($challenge);
     }
 
@@ -204,9 +213,7 @@ class FacebookMessengerServiceTest extends TestCase
      */
     public function testInvalidVerificationToken()
     {
-        $request = $this->getMockBuilder(Request::class)
-            ->disableOriginalConstructor()
-            ->getMock();
+        $request = $this->createMock(\Symfony\Component\HttpFoundation\Request::class);
 
         $request->expects($this->exactly(3))
             ->method('get')
@@ -221,16 +228,17 @@ class FacebookMessengerServiceTest extends TestCase
                 '12345'
             );
 
-        $service = new FacebookMessengerService(new CurlService());
-        $service->handleVerificationToken($request, '98765');
+        $this->messengerService->handleVerificationToken($request, '98765');
     }
 
     /**
      * Test a valid verification token
+     *
+     * @throws \PouleR\FacebookMessengerBundle\Exception\FacebookMessengerException
      */
     public function testValidVerificationToken()
     {
-        $request = $this->getMockBuilder(Request::class)
+        $request = $this->getMockBuilder(\Symfony\Component\HttpFoundation\Request::class)
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -249,8 +257,76 @@ class FacebookMessengerServiceTest extends TestCase
                 'challenge_code'
             );
 
-        $service = new FacebookMessengerService(new CurlService());
-        $challenge = $service->handleVerificationToken($request, '12345');
+        $challenge = $this->messengerService->handleVerificationToken($request, '12345');
         self::assertEquals('challenge_code', $challenge);
+    }
+
+    /**
+     * @throws \Facebook\Exceptions\FacebookSDKException
+     */
+    public function testAddMessageToBatchLimit()
+    {
+        for ($i = 1; $i < 60; $i++) {
+            self::assertEquals($i < 50 ? true : false, $this->messengerService->addMessageToBatch(new Recipient(1), new Message('test')));
+        }
+    }
+
+    /**
+     * @throws \Facebook\Exceptions\FacebookSDKException
+     * @throws \PouleR\FacebookMessengerBundle\Exception\FacebookMessengerException
+     *
+     * @expectedException \PouleR\FacebookMessengerBundle\Exception\FacebookMessengerException
+     */
+    public function testSendBatchRequestsException()
+    {
+        // No batch requests added
+        $this->messengerService->sendBatchRequests();
+    }
+
+    /**
+     * @throws \Facebook\Exceptions\FacebookSDKException
+     * @throws \PouleR\FacebookMessengerBundle\Exception\FacebookMessengerException
+     */
+    public function testSendBatchRequests()
+    {
+        $this->messengerService->addMessageToBatch(new Recipient(2), new Message('test1'));
+        $this->messengerService->addMessageToBatch(new Recipient(4), new Message('test2'));
+        $this->messengerService->addMessageToBatch(new Recipient(6), new Message('test3'));
+        $this->messengerService->addMessageToBatch(new Recipient(8), new Message('test4'));
+
+        $this->clientHandler->append(new Response(
+            200,
+            [],
+            json_encode([
+                [
+                    'code' => 200,
+                ],
+                [
+                    'code' => 500,
+                    'body' => 'error'
+                ],
+                [
+                    'code' => 200
+                ],
+                [
+                    'code' => 501,
+                    'body' => 'error'
+                ]
+            ])
+        ));
+
+        $result = $this->messengerService->sendBatchRequests();
+
+        /** @var Request $request */
+        $request = $this->requestContainer[0]['request'];
+        self::assertEquals('POST', $request->getMethod());
+        self::assertEquals('/v2.10', $request->getUri()->getPath());
+
+        parse_str($request->getBody(), $requestParams);
+        self::assertCount(4, json_decode($requestParams['batch']));
+
+        self::assertCount(2, $result);
+        self::assertEquals(500, $result['message_4_2']);
+        self::assertEquals(501, $result['message_8_4']);
     }
 }

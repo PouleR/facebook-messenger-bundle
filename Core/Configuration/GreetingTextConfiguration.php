@@ -8,9 +8,14 @@ namespace PouleR\FacebookMessengerBundle\Core\Configuration;
 class GreetingTextConfiguration extends AbstractConfiguration
 {
     /**
-     * @var array
+     * @var string
      */
-    protected $greeting = array();
+    protected $text = '';
+
+    /**
+     * @var string
+     */
+    protected $locale = 'default';
 
     /**
      * GreetingTextConfiguration constructor.
@@ -21,18 +26,34 @@ class GreetingTextConfiguration extends AbstractConfiguration
     }
 
     /**
-     * @param string $greetingText
+     * @param string $text
      */
-    public function setGreetingText($greetingText)
+    public function setText($text)
     {
-        $this->greeting = array('text' => $greetingText);
+        $this->text = $text;
     }
 
     /**
-     * @return string|null
+     * @param string $locale
      */
-    public function getGreeting()
+    public function setLocale($locale)
     {
-        return $this->greeting;
+        $this->locale = $locale;
+    }
+
+    /**
+     * @return string
+     */
+    public function getText()
+    {
+        return $this->text;
+    }
+
+    /**
+     * @return string
+     */
+    public function getLocale()
+    {
+        return $this->locale;
     }
 }

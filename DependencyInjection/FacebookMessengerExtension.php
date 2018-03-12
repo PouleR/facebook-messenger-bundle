@@ -21,5 +21,12 @@ class FacebookMessengerExtension extends Extension
     {
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yml');
+
+        $configuration = new Configuration();
+        $config = $this->processConfiguration($configuration, $configs);
+
+        $definition = $container->getDefinition('pouler.facebookmessenger.service');
+        $definition->replaceArgument(1, $config['app_id']);
+        $definition->replaceArgument(2, $config['client_secret']);
     }
 }
