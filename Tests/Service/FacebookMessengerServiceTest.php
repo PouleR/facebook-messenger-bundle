@@ -55,7 +55,12 @@ class FacebookMessengerServiceTest extends TestCase
         $stack = HandlerStack::create($this->clientHandler);
         $stack->push($history);
 
-        $this->messengerService = new FacebookMessengerService('app.id', 'app.secret', new NullLogger(), new Client(['handler' => $stack]));
+        $this->messengerService = new FacebookMessengerService(
+            'app.id',
+            'app.secret',
+            new NullLogger(),
+            new Client(['handler' => $stack])
+        );
         $this->messengerService->setAccessToken('access.token');
     }
 
@@ -65,7 +70,11 @@ class FacebookMessengerServiceTest extends TestCase
     public function testPostMessage()
     {
         $this->clientHandler->append(new Response());
-        $this->messengerService->postMessage(new Recipient(1), new Message('Test'), FacebookMessengerService::MSG_TYPE_RESPONSE);
+        $this->messengerService->postMessage(
+            new Recipient(1),
+            new Message('Test'),
+            FacebookMessengerService::MSG_TYPE_RESPONSE
+        );
 
         /** @var Request $request */
         $request = $this->requestContainer[0]['request'];
@@ -267,7 +276,9 @@ class FacebookMessengerServiceTest extends TestCase
     public function testAddMessageToBatchLimit()
     {
         for ($i = 1; $i < 60; $i++) {
-            self::assertEquals($i < 50 ? true : false, $this->messengerService->addMessageToBatch(new Recipient(1), new Message('test')));
+            self::assertEquals($i < 50 ? true : false,
+                $this->messengerService->addMessageToBatch(new Recipient(1), new Message('test'))
+            );
         }
     }
 

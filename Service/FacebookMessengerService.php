@@ -70,7 +70,7 @@ class FacebookMessengerService
      *
      * @throws \Facebook\Exceptions\FacebookSDKException
      */
-    public function __construct($appId = '', $appSecret = '', LoggerInterface $logger, Client $client = null)
+    public function __construct($appId, $appSecret, LoggerInterface $logger, Client $client = null)
     {
         if (!$client) {
             $client = new Client();
