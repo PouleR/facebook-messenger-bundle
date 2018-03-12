@@ -276,9 +276,8 @@ class FacebookMessengerServiceTest extends TestCase
     public function testAddMessageToBatchLimit()
     {
         for ($i = 1; $i < 60; $i++) {
-            self::assertEquals($i < 50 ? true : false,
-                $this->messengerService->addMessageToBatch(new Recipient(1), new Message('test'))
-            );
+            $result = $this->messengerService->addMessageToBatch(new Recipient(1), new Message('test'));
+            self::assertEquals($i < 50 ? true : false, $result);
         }
     }
 
