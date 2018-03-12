@@ -2,6 +2,9 @@ language: php
 
 php:
     - 7.0
+    - 7.1
+    - 7.2
+
 
 matrix:
     fast_finish: true
@@ -13,4 +16,4 @@ install:
 
 script:
     - phpunit --coverage-text --colors
-    - php ./vendor/bin/phpcs --standard=psr2 Core/ DependencyInjection/ Exception/ Resources/ Service/ Tests/ FacebookMessengerBundle.php
+    - php ./vendor/bin/phpcs --standard=psr2 Client/ Core/ DependencyInjection/ Exception/ Resources/ Service/ Tests/ FacebookMessengerBundle.php
