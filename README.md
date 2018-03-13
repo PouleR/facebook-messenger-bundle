@@ -78,19 +78,7 @@ $service->addMessageToBatch(new Recipient('PSID3'), $message);
 
 $response = $service->sendBatchRequests();
 
-// The response contains an array with failed requests
-var_dump($response);
-
-// For e.g.:
-["batch_PSID_#1"]=>
-  array(2) {
-    ["code"]=>
-    int(400)
-    ["body"]=>
-    string(139) "{"error":{"message":"(#100) No matching user found","type":"OAuthException","code":100,"error_subcode":123456,"fbtrace_id":"XXXXX"}}"
-  }
-  
-//The keys are configured as: 'batch_{PSID}_#{POSITION_IN_BATCH}'
+// The response variable contains an array with FailedMessageRequest objects
 ```
 
 ### Create a generic template message

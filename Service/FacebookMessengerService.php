@@ -6,6 +6,7 @@ use Facebook\Facebook;
 use Facebook\FacebookBatchRequest;
 use Facebook\FacebookResponse;
 use GuzzleHttp\Client;
+use PouleR\FacebookMessengerBundle\Client\FailedMessageRequest;
 use PouleR\FacebookMessengerBundle\Client\Guzzle6HttpClient;
 use PouleR\FacebookMessengerBundle\Core\Configuration\GetStartedConfiguration;
 use PouleR\FacebookMessengerBundle\Core\Configuration\GreetingTextConfiguration;
@@ -34,6 +35,8 @@ class FacebookMessengerService
     const MSG_TYPE_MESSAGE_TAG = 'MESSAGE_TAG';
 
     const MAX_BATCH_REQUESTS = 50;
+    const BATCH_KEY = 'batch_%s_#%d';
+    const BATCH_REGEX = '/batch_(.*)\_#/';
 
     /**
      * @var string
@@ -135,7 +138,7 @@ class FacebookMessengerService
 
         $request = $this->createMessageRequest($recipient, $message, $type);
         $requestName = sprintf(
-            'batch_%s_#%d',
+            self::BATCH_KEY,
             $recipient->getId(),
             ++$batchRequestCount
         );
@@ -152,6 +155,8 @@ class FacebookMessengerService
     /**
      * @throws FacebookMessengerException
      * @throws \Facebook\Exceptions\FacebookSDKException
+     *
+     * @return FailedMessageRequest[]
      */
     public function sendBatchRequests()
     {
@@ -168,10 +173,10 @@ class FacebookMessengerService
          */
         foreach ($responses as $key => $response) {
             if ($response->isError()) {
-                $failedRequests[$key] = [
-                    'code' => $response->getHttpStatusCode(),
-                    'body' => $response->getBody(),
-                ];
+                $failedRequest = new FailedMessageRequest($response->getHttpStatusCode(), $response->getBody());
+                $failedRequest->setPsid($this->getPsidFromBatchKey($key));
+
+                $failedRequests[] = $failedRequest;
             }
         }
 
@@ -343,5 +348,23 @@ class FacebookMessengerService
         $serializer = new Serializer([$normalizer], [new JsonEncoder()]);
 
         return $serializer;
+    }
+
+    /**
+     * @param string $key
+     *
+     * @return int
+     */
+    private function getPsidFromBatchKey($key)
+    {
+        if (!preg_match(self::BATCH_REGEX, $key, $matches)) {
+            return 0;
+        }
+
+        if (!isset($matches[1])) {
+            return 0;
+        }
+
+        return (int) $matches[1];
     }
 }

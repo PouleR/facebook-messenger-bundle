@@ -336,9 +336,11 @@ class FacebookMessengerServiceTest extends TestCase
         self::assertCount(4, json_decode($requestParams['batch']));
 
         self::assertCount(2, $result);
-        self::assertEquals(500, $result['batch_4_#2']['code']);
-        self::assertEquals('error', $result['batch_4_#2']['body']);
-        self::assertEquals(501, $result['batch_8_#4']['code']);
-        self::assertEquals('{"error":{"message":"(#100) No matching user found"}}', $result['batch_8_#4']['body']);
+        self::assertEquals(500, $result[0]->getResponseCode());
+        self::assertEquals('error', $result[0]->getResponseBody());
+        self::assertEquals(4, $result[0]->getPsid());
+        self::assertEquals(501, $result[1]->getResponseCode());
+        self::assertEquals('{"error":{"message":"(#100) No matching user found"}}', $result[1]->getResponseBody());
+        self::assertEquals(8, $result[1]->getPsid());
     }
 }
