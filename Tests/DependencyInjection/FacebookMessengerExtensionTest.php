@@ -26,7 +26,7 @@ class FacebookMessengerExtensionTest extends TestCase
         $definition = $container->getDefinition('pouler.facebookmessenger.service');
         $arguments = $definition->getArguments();
 
-        self::assertEquals('fb_app_id', $arguments[1]);
-        self::assertEquals('fb_app_secret', $arguments[2]);
+        self::assertEquals('fb_app_id', $arguments[0]);
+        self::assertEquals('fb_app_secret', $arguments[1]);
     }
 }

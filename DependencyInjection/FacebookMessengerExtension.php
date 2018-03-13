@@ -26,7 +26,7 @@ class FacebookMessengerExtension extends Extension
         $loader->load('services.yml');
 
         $definition = $container->getDefinition('pouler.facebookmessenger.service');
-        $definition->replaceArgument(1, $config['app_id']);
-        $definition->replaceArgument(2, $config['app_secret']);
+        $definition->replaceArgument(0, $config['app_id']);
+        $definition->replaceArgument(1, $config['app_secret']);
     }
 }
