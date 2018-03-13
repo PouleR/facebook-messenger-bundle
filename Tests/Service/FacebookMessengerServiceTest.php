@@ -277,7 +277,7 @@ class FacebookMessengerServiceTest extends TestCase
     {
         for ($i = 1; $i < 60; $i++) {
             $result = $this->messengerService->addMessageToBatch(new Recipient(1), new Message('test'));
-            self::assertEquals($i < 50 ? true : false, $result);
+            self::assertEquals($i <= 50 ? true : false, $result);
         }
     }
 
@@ -320,7 +320,7 @@ class FacebookMessengerServiceTest extends TestCase
                 ],
                 [
                     'code' => 501,
-                    'body' => 'error'
+                    'body' => '{"error":{"message":"(#100) No matching user found"}}'
                 ]
             ])
         ));
@@ -336,7 +336,9 @@ class FacebookMessengerServiceTest extends TestCase
         self::assertCount(4, json_decode($requestParams['batch']));
 
         self::assertCount(2, $result);
-        self::assertEquals(500, $result['message_4_2']);
-        self::assertEquals(501, $result['message_8_4']);
+        self::assertEquals(500, $result['batch_4_#2']['code']);
+        self::assertEquals('error', $result['batch_4_#2']['body']);
+        self::assertEquals(501, $result['batch_8_#4']['code']);
+        self::assertEquals('{"error":{"message":"(#100) No matching user found"}}', $result['batch_8_#4']['body']);
     }
 }

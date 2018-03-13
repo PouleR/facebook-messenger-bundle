@@ -56,11 +56,6 @@ class FacebookMessengerService
     protected $batchRequest;
 
     /**
-     * @var int
-     */
-    protected $batchRequestCount = 0;
-
-    /**
      * FacebookMessengerService constructor.
      *
      * @param string|int      $appId
@@ -132,16 +127,17 @@ class FacebookMessengerService
             $this->logger->debug('Create new batch request');
         }
 
-        if ($this->batchRequestCount >= (self::MAX_BATCH_REQUESTS - 1)) {
+        $batchRequestCount = count($this->batchRequest->getRequests());
+
+        if ($batchRequestCount >= (self::MAX_BATCH_REQUESTS)) {
             return false;
         }
 
-        ++$this->batchRequestCount;
         $request = $this->createMessageRequest($recipient, $message, $type);
         $requestName = sprintf(
-            'message_%s_%d',
+            'batch_%s_#%d',
             $recipient->getId(),
-            $this->batchRequestCount
+            ++$batchRequestCount
         );
 
         $this->batchRequest->add($request, [
@@ -172,11 +168,14 @@ class FacebookMessengerService
          */
         foreach ($responses as $key => $response) {
             if ($response->isError()) {
-                $failedRequests[$key] = $response->getHttpStatusCode();
+                $failedRequests[$key] = [
+                    'code' => $response->getHttpStatusCode(),
+                    'body' => $response->getBody(),
+                ];
             }
         }
 
-        $this->batchRequestCount = 0;
+        $this->batchRequest = null;
 
         return $failedRequests;
     }
