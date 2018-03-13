@@ -130,7 +130,12 @@ class FacebookMessengerService
             $this->logger->debug('Create new batch request');
         }
 
-        $batchRequestCount = count($this->batchRequest->getRequests());
+        $batchRequestCount = 0;
+        $batchRequests = $this->batchRequest->getRequests();
+
+        if (is_array($batchRequests)) {
+            $batchRequestCount = count($batchRequests);
+        }
 
         if ($batchRequestCount >= (self::MAX_BATCH_REQUESTS)) {
             return false;
