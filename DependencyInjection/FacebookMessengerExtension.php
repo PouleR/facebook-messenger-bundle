@@ -29,4 +29,12 @@ class FacebookMessengerExtension extends Extension
         $definition->replaceArgument(0, $config['app_id']);
         $definition->replaceArgument(1, $config['app_secret']);
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getAlias()
+    {
+        return 'pouler_facebook_messenger';
+    }
 }

@@ -2,6 +2,7 @@
 
 namespace PouleR\FacebookMessengerBundle;
 
+use PouleR\FacebookMessengerBundle\DependencyInjection\FacebookMessengerExtension;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 /**
@@ -9,4 +10,11 @@ use Symfony\Component\HttpKernel\Bundle\Bundle;
  */
 class FacebookMessengerBundle extends Bundle
 {
+    /**
+     * {@inheritdoc}
+     */
+    public function getContainerExtension()
+    {
+        return new FacebookMessengerExtension();
+    }
 }
