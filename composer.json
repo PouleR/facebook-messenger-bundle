@@ -1,18 +1,18 @@
 {
     "name": "pouler/facebook-messenger-bundle",
     "description": "A Symfony bundle for Facebook Messenger",
-    "type": "",
+    "type": "project",
     "autoload": {
         "psr-4": { "PouleR\\FacebookMessengerBundle\\": "" }
     },
     "require": {
         "php": ">=7.0",
-        "symfony/serializer": "^2.8||^3.0",
-        "symfony/property-access": "^2.8||^3.0",
-        "symfony/framework-bundle": "^2.8||^3.0",
+        "symfony/serializer": "^3.0|^4.0",
+        "symfony/property-access": "^3.0|4.0",
+        "symfony/framework-bundle": "^3.0|^4.0",
         "facebook/graph-sdk": "^5.6",
         "guzzlehttp/guzzle": "^6.3",
-        "symfony/yaml": "^2.8||^3.0"
+        "symfony/yaml": "^3.0|^4.0"
     },
     "license": "MIT",
     "authors": [
@@ -25,7 +25,7 @@
     "require-dev": {
         "friendsofphp/php-cs-fixer": "^1.11",
         "squizlabs/php_codesniffer": "^2.6",
-        "phpunit/phpunit": "^6.0",
-        "php-mock/php-mock-phpunit": "^2.0"
+        "php-mock/php-mock-phpunit": "^2.1",
+        "phpunit/phpunit": "^6"
     }
 }
