@@ -10,35 +10,22 @@ class GetStartedConfiguration extends AbstractConfiguration
     /**
      * @var string
      */
-    protected $threadState = 'new_thread';
-
-    /**
-     * @var array
-     */
-    protected $callToActions = array();
+    protected $payload = '';
 
     /**
      * GetStartedConfiguration constructor.
      */
     public function __construct()
     {
-        $this->setSettingType('call_to_actions');
+        $this->setSettingType('get_started');
     }
 
     /**
      * @return string
      */
-    public function getThreadState()
+    public function getPayload()
     {
-        return $this->threadState;
-    }
-
-    /**
-     * @return array
-     */
-    public function getCallToActions()
-    {
-        return $this->callToActions;
+        return $this->payload;
     }
 
     /**
@@ -46,6 +33,6 @@ class GetStartedConfiguration extends AbstractConfiguration
      */
     public function setPayload($payload)
     {
-        $this->callToActions[] = array('payload' => $payload);
+        $this->payload = $payload;
     }
 }

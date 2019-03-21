@@ -2,10 +2,18 @@
 
 namespace PouleR\FacebookMessengerBundle\Service;
 
-use PouleR\FacebookMessengerBundle\Core\Configuration\ConfigurationInterface;
+use Facebook\Facebook;
+use Facebook\FacebookBatchRequest;
+use Facebook\FacebookResponse;
+use GuzzleHttp\Client;
+use PouleR\FacebookMessengerBundle\Client\FailedMessageRequest;
+use PouleR\FacebookMessengerBundle\Client\Guzzle6HttpClient;
+use PouleR\FacebookMessengerBundle\Core\Configuration\GetStartedConfiguration;
+use PouleR\FacebookMessengerBundle\Core\Configuration\GreetingTextConfiguration;
 use PouleR\FacebookMessengerBundle\Core\Entity\Recipient;
 use PouleR\FacebookMessengerBundle\Core\Message;
 use PouleR\FacebookMessengerBundle\Exception\FacebookMessengerException;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\NameConverter\CamelCaseToSnakeCaseNameConverter;
@@ -13,7 +21,7 @@ use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Serializer\Serializer;
 
 /**
- * Class MessengerApi.
+ * Class FacebookMessengerService
  */
 class FacebookMessengerService
 {
@@ -22,7 +30,13 @@ class FacebookMessengerService
     const VERIFY_KEY_HUB_CHALLENGE = 'hub_challenge';
     const VERIFY_VAL_SUBSCRIBE = 'subscribe';
 
-    const FB_API_URL = 'https://graph.facebook.com/v2.6';
+    const MSG_TYPE_RESPONSE = 'RESPONSE';
+    const MSG_TYPE_UPDATE = 'UPDATE';
+    const MSG_TYPE_MESSAGE_TAG = 'MESSAGE_TAG';
+
+    const MAX_BATCH_REQUESTS = 50;
+    const BATCH_KEY = 'batch_%s_#%d';
+    const BATCH_REGEX = '/batch_(.*)\_#/';
 
     /**
      * @var string
@@ -30,36 +44,42 @@ class FacebookMessengerService
     protected $accessToken;
 
     /**
-     * @var array
+     * @var LoggerInterface
      */
-    protected $encoders;
+    protected $logger;
 
     /**
-     * @var Serializer
+     * @var Facebook
      */
-    protected $serializer;
+    protected $facebookSDK;
 
     /**
-     * @var array
+     * @var FacebookBatchRequest
      */
-    protected $normalizers;
-
-    /**
-     * @var CurlInterface
-     */
-    protected $curlService;
+    protected $batchRequest;
 
     /**
      * FacebookMessengerService constructor.
      *
-     * @param CurlInterface $curlService
+     * @param string|int      $appId
+     * @param string|int      $appSecret
+     * @param LoggerInterface $logger
+     * @param Client|null     $client
+     *
+     * @throws \Facebook\Exceptions\FacebookSDKException
      */
-    public function __construct(CurlInterface $curlService)
+    public function __construct($appId, $appSecret, LoggerInterface $logger, Client $client = null)
     {
-        $this->encoders = [new JsonEncoder()];
-        $this->normalizers = [new ObjectNormalizer(null, new CamelCaseToSnakeCaseNameConverter())];
-        $this->serializer = new Serializer($this->normalizers, $this->encoders);
-        $this->curlService = $curlService;
+        if (!$client) {
+            $client = new Client();
+        }
+
+        $this->logger = $logger;
+        $this->facebookSDK = new Facebook([
+            'http_client_handler' => new Guzzle6HttpClient($client),
+            'app_id' => $appId,
+            'app_secret' => $appSecret,
+        ]);
     }
 
     /**
@@ -73,77 +93,205 @@ class FacebookMessengerService
     /**
      * @param Recipient $recipient
      * @param Message   $message
+     * @param string    $type
      *
-     * @throws FacebookMessengerException
+     * @return array
      *
-     * @return mixed
+     * @throws \Facebook\Exceptions\FacebookSDKException
      */
-    public function postMessage(Recipient $recipient, Message $message)
+    public function postMessage(Recipient $recipient, Message $message, $type = self::MSG_TYPE_RESPONSE)
     {
-        $this->checkAccessToken();
+        $request = $this->createMessageRequest($recipient, $message, $type);
+        $response = $this->facebookSDK->getClient()->sendRequest($request);
 
-        // Build the URL
-        $url = self::FB_API_URL.'/me/messages';
-
-        // Serialize the content
-        $content = $this->serializer->serialize([
-                'recipient' => $recipient,
-                'message' => $message,
-                'access_token' => $this->accessToken,
-            ], 'json');
-
-        // Do the call and return the JSON response
-        return json_decode($this->curlService->post($url, $content), true);
+        return $response->getDecodedBody();
     }
 
     /**
-     * @param ConfigurationInterface $configuration
+     * https://developers.facebook.com/docs/graph-api/making-multiple-requests
      *
-     * @throws FacebookMessengerException
+     * @param Recipient $recipient
+     * @param Message   $message
+     * @param string    $type
      *
-     * @return mixed
+     * @return boolean
+     *
+     * @throws \Facebook\Exceptions\FacebookSDKException
      */
-    public function postConfiguration(ConfigurationInterface $configuration)
+    public function addMessageToBatch(Recipient $recipient, Message $message, $type = self::MSG_TYPE_RESPONSE)
     {
-        $this->checkAccessToken();
+        if (!$this->batchRequest) {
+            $this->batchRequest = new FacebookBatchRequest(
+                $this->facebookSDK->getApp(),
+                [],
+                $this->accessToken
+            );
 
-        $params = [
-            'access_token' => $this->accessToken,
-        ];
+            $this->logger->debug('Create new batch request');
+        }
 
-        // Build the URL
-        $url = self::FB_API_URL.'/me/thread_settings?'.http_build_query($params);
+        $batchRequestCount = 0;
+        $batchRequests = $this->batchRequest->getRequests();
 
-        // Serialize the content
-        $content = $this->serializer->serialize($configuration, 'json');
+        if (is_array($batchRequests)) {
+            $batchRequestCount = count($batchRequests);
+        }
 
-        // Do the call and return the JSON response
-        return json_decode($this->curlService->post($url, $content), true);
+        if ($batchRequestCount >= (self::MAX_BATCH_REQUESTS)) {
+            return false;
+        }
+
+        $request = $this->createMessageRequest($recipient, $message, $type);
+        $requestName = sprintf(
+            self::BATCH_KEY,
+            $recipient->getId(),
+            ++$batchRequestCount
+        );
+
+        $this->batchRequest->add($request, [
+            'name' => $requestName,
+        ]);
+
+        $this->logger->debug('Added request to batch', ['name' => $requestName]);
+
+        return true;
     }
 
     /**
-     * @param $id
-     * @param array $fields
-     *
      * @throws FacebookMessengerException
+     * @throws \Facebook\Exceptions\FacebookSDKException
      *
-     * @return mixed
+     * @return FailedMessageRequest[]
+     */
+    public function sendBatchRequests()
+    {
+        if (!$this->batchRequest instanceof FacebookBatchRequest) {
+            throw new FacebookMessengerException('Invalid batch request');
+        }
+
+        $failedRequests = [];
+        $responses = $this->facebookSDK->getClient()->sendBatchRequest($this->batchRequest);
+
+        /**
+         * @var string           $key
+         * @var FacebookResponse $response
+         */
+        foreach ($responses as $key => $response) {
+            if ($response->isError()) {
+                $failedRequest = new FailedMessageRequest($response->getHttpStatusCode(), $response->getBody());
+                $failedRequest->setPsid($this->getPsidFromBatchKey($key));
+
+                $failedRequests[] = $failedRequest;
+            }
+        }
+
+        $this->batchRequest = null;
+
+        return $failedRequests;
+    }
+
+    /**
+     * https://developers.facebook.com/docs/messenger-platform/identity/user-profile#request
+     *
+     * @param int|string $id
+     * @param array      $fields
+     *
+     * @return array
+     *
+     * @throws \Facebook\Exceptions\FacebookSDKException
      */
     public function getUser($id, array $fields = ['first_name', 'last_name'])
     {
-        $this->checkAccessToken();
+        $endPoint = sprintf('/%s?fields=%s', $id, implode($fields, ','));
+        $response = $this->facebookSDK->get($endPoint, $this->accessToken);
 
-        // Build the URL
-        $url = self::FB_API_URL.'/'.$id;
+        return $response->getDecodedBody();
+    }
 
-        // Add some params
+    /**
+     * https://developers.facebook.com/docs/messenger-platform/identity/account-linking
+     *
+     * @param string $linkingToken
+     *
+     * @return array
+     *
+     * @throws \Facebook\Exceptions\FacebookSDKException
+     */
+    public function getPsid($linkingToken)
+    {
         $params = [
-            'fields' => implode($fields, ','),
-            'access_token' => $this->accessToken,
+            'fields' => 'recipient',
+            'account_linking_token' => $linkingToken,
         ];
 
-        // Do the call and return the JSON response
-        return json_decode($this->curlService->get($url, $params), true);
+        $endPoint = sprintf('/me?%s', http_build_query($params));
+        $response = $this->facebookSDK->get($endPoint, $this->accessToken);
+
+        return $response->getDecodedBody();
+    }
+
+    /**
+     * https://developers.facebook.com/docs/messenger-platform/identity/account-linking#unlink
+     *
+     * @param int|string $psid
+     *
+     * @return array
+     *
+     * @throws \Facebook\Exceptions\FacebookSDKException
+     */
+    public function unlinkAccount($psid)
+    {
+        $params = [
+            'psid' => $psid,
+        ];
+
+        $response = $this->facebookSDK->post('/me/unlink_accounts', $params, $this->accessToken);
+
+        return $response->getDecodedBody();
+    }
+
+    /**
+     * https://developers.facebook.com/docs/messenger-platform/reference/messenger-profile-api
+     *
+     * @param GreetingTextConfiguration $configuration
+     *
+     * @return array
+     *
+     * @throws \Facebook\Exceptions\FacebookSDKException
+     */
+    public function setGreetingText(GreetingTextConfiguration $configuration)
+    {
+        $serializer = $this->getSerializer(['settingType']);
+
+        $params = [
+            $configuration->getSettingType() => [$serializer->serialize($configuration, 'json')],
+            ];
+
+        $response = $this->facebookSDK->post('/me/messenger_profile', $params, $this->accessToken);
+
+        return $response->getDecodedBody();
+    }
+
+    /**
+     * https://developers.facebook.com/docs/messenger-platform/reference/messenger-profile-api
+     *
+     * @param GetStartedConfiguration $configuration
+     *
+     * @return array
+     *
+     * @throws \Facebook\Exceptions\FacebookSDKException
+     */
+    public function setGetStarted(GetStartedConfiguration $configuration)
+    {
+        $serializer = $this->getSerializer(['settingType']);
+
+        $params = [
+            $configuration->getSettingType() => $serializer->serialize($configuration, 'json'),
+        ];
+
+        $response = $this->facebookSDK->post('/me/messenger_profile', $params, $this->accessToken);
+
+        return $response->getDecodedBody();
     }
 
     /**
@@ -152,7 +300,9 @@ class FacebookMessengerService
      *
      * @param Request $request
      * @param string  $verificationToken
+     *
      * @return string|null
+     *
      * @throws FacebookMessengerException
      */
     public function handleVerificationToken(Request $request, $verificationToken)
@@ -170,12 +320,56 @@ class FacebookMessengerService
     }
 
     /**
-     * @throws FacebookMessengerException
+     * @param Recipient $recipient
+     * @param Message   $message
+     * @param string    $type
+     *
+     * @return \Facebook\FacebookRequest
+     *
+     * @throws \Facebook\Exceptions\FacebookSDKException
      */
-    private function checkAccessToken()
+    private function createMessageRequest(Recipient $recipient, Message $message, $type = self::MSG_TYPE_RESPONSE)
     {
-        if (empty($this->accessToken)) {
-            throw new FacebookMessengerException('The access token must be set.');
+        $serializer = $this->getSerializer();
+
+        $params = [
+            'recipient' => $serializer->serialize($recipient, 'json'),
+            'message' => $serializer->serialize($message, 'json'),
+            'type' => $type,
+        ];
+
+        return $this->facebookSDK->request('POST', '/me/messages', $params, $this->accessToken);
+    }
+
+    /**
+     * @param array $ignoredAttributes
+     *
+     * @return Serializer
+     */
+    private function getSerializer($ignoredAttributes = [])
+    {
+        $normalizer = new ObjectNormalizer(null, new CamelCaseToSnakeCaseNameConverter());
+        $normalizer->setIgnoredAttributes($ignoredAttributes);
+        $serializer = new Serializer([$normalizer], [new JsonEncoder()]);
+
+        return $serializer;
+    }
+
+    /**
+     * @param string $key
+     *
+     * @return int
+     */
+    private function getPsidFromBatchKey($key)
+    {
+        if (!preg_match(self::BATCH_REGEX, $key, $matches)) {
+            return 0;
         }
+
+        if (!isset($matches[1])) {
+            return 0;
+        }
+
+        return (int) $matches[1];
     }
 }
