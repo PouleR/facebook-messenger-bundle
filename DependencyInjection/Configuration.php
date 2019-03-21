@@ -15,8 +15,8 @@ class Configuration implements ConfigurationInterface
      */
     public function getConfigTreeBuilder()
     {
-        $treeBuilder = new TreeBuilder();
-        $rootNode = $treeBuilder->root('pouler_facebook_messenger');
+        $treeBuilder = new TreeBuilder('pouler_facebook_messenger');
+        $rootNode = $treeBuilder->getRootNode();
 
         $rootNode
             ->children()
