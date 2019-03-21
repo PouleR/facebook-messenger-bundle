@@ -16,7 +16,12 @@ class Configuration implements ConfigurationInterface
     public function getConfigTreeBuilder()
     {
         $treeBuilder = new TreeBuilder('pouler_facebook_messenger');
-        $rootNode = $treeBuilder->getRootNode();
+        if (method_exists($treeBuilder, 'getRootNode')) {
+            $rootNode = $treeBuilder->getRootNode();
+        } else {
+            // BC layer for symfony/config 4.1 and older
+            $rootNode = $treeBuilder->root('pouler_facebook_messenger');
+        }
 
         $rootNode
             ->children()
