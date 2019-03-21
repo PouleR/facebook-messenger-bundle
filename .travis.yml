@@ -14,5 +14,5 @@ install:
     - composer update --no-interaction --prefer-source $COMPOSER_FLAGS
 
 script:
-    - phpunit --coverage-text --colors
+    - php ./vendor/bin/phpunit --coverage-text --colors
     - php ./vendor/bin/phpcs --standard=psr2 Client/ Core/ DependencyInjection/ Exception/ Resources/ Service/ Tests/ FacebookMessengerBundle.php
